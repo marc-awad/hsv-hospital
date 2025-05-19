@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSV Hospital - Book an Appointment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Primary colors */
+            --color-primary: #7c3aed; /* mauve 9 */
+            --color-primary-hover: #6f3ccf; /* mauve 10 */
+            --color-primary-light: #ede9fe; /* mauve 3 */
+            --color-primary-ultra-light: #f5f3ff; /* mauve 1 */
+
+            /* Background */
+            --color-background: #f8fafc; /* slate 1 */
+            --color-surface: #e2e8f0; /* slate 3 */
+
+            /* Text */
+            --color-text: #0f172a; /* slate 12 */
+            --color-text-muted: #64748b; /* slate 9 */
+            --color-text-light: #94a3b8; /* slate 7 */
+
+            /* Status */
+            --color-success: #22c55e; /* green 9 */
+            --color-success-light: #dcfce7; /* green 2 */
+            --color-error: #ef4444; /* red 9 */
+            --color-error-light: #fee2e2; /* red 2 */
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        header {
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-primary);
+            color: white;
+            font-weight: 700;
+            border-radius: var(--radius-md);
+            font-size: 1.25rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-text);
+            letter-spacing: -0.01em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color var(--transition-fast);
+        }
+
+        .nav-links a:hover {
+            color: var(--color-primary);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .page-header p {
+            color: var(--color-text-muted);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .booking-container {
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .booking-form {
+            background-color: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .form-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-title svg {
+            color: var(--color-primary);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-control {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control.full-width {
+            grid-column: span 2;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--color-text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--color-surface);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            color: var(--color-text);
+            background-color: white;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary-light);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--color-surface);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            color: var(--color-text);
+            background-color: white;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--color-primary-light);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            font-size: 1rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-hover);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .submit-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .submit-row .btn {
+            min-width: 150px;
+        }
+
+        /* Calendar styling */
+        .date-picker-container {
+            position: relative;
+        }
+
+        .date-picker {
+            cursor: pointer;
+        }
+
+        /* Confirmation modal */
+        .modal-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-normal);
+        }
+
+        .modal-container.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            transform: translateY(20px);
+            transition: transform var(--transition-normal);
+        }
+
+        .modal-container.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-success-light);
+            color: var(--color-success);
+            border-radius: var(--radius-full);
+            margin-right: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .confirmation-details {
+            background-color: var(--color-background);
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+        }
+
+        .confirmation-item {
+            display: flex;
+            margin-bottom: 0.75rem;
+        }
+
+        .confirmation-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .confirmation-label {
+            width: 40%;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+        }
+
+        .confirmation-value {
+            width: 60%;
+            color: var(--color-text);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .required-field::after {
+            content: "*";
+            color: var(--color-error);
+            margin-left: 0.25rem;
+        }
+
+        footer {
+            background-color: white;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--color-surface);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            color: var(--color-primary);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-control.full-width {
+                grid-column: span 1;
+            }
+
+            .booking-form {
+                padding: 1.5rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="logo-container">
+            <div class="logo">HSV</div>
+            <div class="logo-text">HSV Hospital</div>
+        </a>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/tracking">Track Appointment</a>
+            <a href="/contact">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1>Book Your Appointment</h1>
+            <p>Fill out the form below to schedule a consultation with one of our specialists.</p>
+        </div>
+
+        <div class="booking-container">
+            <form id="appointmentForm" class="booking-form">
+                <h2 class="form-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Patient Information
+                </h2>
+                
+                <div class="form-grid">
+                    <div class="form-control">
+                        <label for="firstName" class="form-label required-field">First Name</label>
+                        <input type="text" id="firstName" class="form-input" placeholder="Your first name" required>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label for="lastName" class="form-label required-field">Last Name</label>
+                        <input type="text" id="lastName" class="form-input" placeholder="Your last name" required>
+                    </div>
+                </div>
+
+                <h2 class="form-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Appointment Details
+                </h2>
+                
+                <div class="form-grid">
+                    <div class="form-control">
+                        <label for="specialty" class="form-label required-field">Medical Specialty</label>
+                        <select id="specialty" class="form-select" required>
+                            <option value="" disabled selected>Select a specialty</option>
+                            <option value="cardiology">Cardiology</option>
+                            <option value="dermatology">Dermatology</option>
+                            <option value="neurology">Neurology</option>
+                            <option value="orthopedics">Orthopedics</option>
+                            <option value="pediatrics">Pediatrics</option>
+                            <option value="gynecology">Gynecology</option>
+                            <option value="ophthalmology">Ophthalmology</option>
+                            <option value="psychiatry">Psychiatry</option>
+                            <option value="urology">Urology</option>
+                            <option value="general">General Medicine</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label for="appointmentDate" class="form-label required-field">Preferred Date</label>
+                        <div class="date-picker-container">
+                            <input type="date" id="appointmentDate" class="form-input date-picker" required min="">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="submit-row">
+                    <button type="submit" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Confirm Appointment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <div id="confirmationModal" class="modal-container">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <h3 class="modal-title">Appointment Confirmed!</h3>
+            </div>
+            
+            <div class="confirmation-details">
+                <div class="confirmation-item">
+                    <div class="confirmation-label">Patient</div>
+                    <div id="confirmName" class="confirmation-value">John Doe</div>
+                </div>
+                <div class="confirmation-item">
+                    <div class="confirmation-label">Specialty</div>
+                    <div id="confirmSpecialty" class="confirmation-value">Cardiology</div>
+                </div>
+                <div class="confirmation-item">
+                    <div class="confirmation-label">Date</div>
+                    <div id="confirmDate" class="confirmation-value">May 25, 2025</div>
+                </div>
+                <div class="confirmation-item">
+                    <div class="confirmation-label">Time</div>
+                    <div id="confirmTime" class="confirmation-value">14:30</div>
+                </div>
+                <div class="confirmation-item">
+                    <div class="confirmation-label">Doctor</div>
+                    <div id="confirmDoctor" class="confirmation-value">Dr. Smith</div>
+                </div>
+            </div>
+            
+            <p>You will receive a confirmation email with these details shortly. We look forward to seeing you!</p>
+            
+            <div class="modal-actions">
+                <button id="closeModal" class="btn btn-primary">
+                    Got it
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/privacy-policy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+                <a href="/contact">Contact Us</a>
+            </div>
+            <div class="copyright">
+                © 2025 HSV Hospital. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Set minimum date to today
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+        document.getElementById('appointmentDate').min = formattedDate;
+
+        // Handle form submission
+        document.getElementById('appointmentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Get form values
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const specialty = document.getElementById('specialty');
+            const specialtyText = specialty.options[specialty.selectedIndex].text;
+            const date = document.getElementById('appointmentDate').value;
+            
+            // Format date for display
+            const formattedDateDisplay = new Date(date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // Generate random time and doctor based on specialty
+            const doctors = {
+                'cardiology': 'Dr. Sarah Johnson',
+                'dermatology': 'Dr. Michael Chen',
+                'neurology': 'Dr. Emily Rodriguez',
+                'orthopedics': 'Dr. James Wilson',
+                'pediatrics': 'Dr. Lisa Thompson',
+                'gynecology': 'Dr. Anna Martinez',
+                'ophthalmology': 'Dr. Robert Kim',
+                'psychiatry': 'Dr. Jessica Brown',
+                'urology': 'Dr. David Lee',
+                'general': 'Dr. Thomas Anderson'
+            };
+            
+            // Generate a random time between 9:00 and 16:30 in 30-minute intervals
+            const hours = Math.floor(Math.random() * 8) + 9; // 9 to 16
+            const minutes = Math.random() < 0.5 ? '00' : '30';
+            const time = `${hours}:${minutes}`;
+            
+            // Get doctor based on specialty
+            const doctor = doctors[specialty.value] || 'Dr. Smith';
+            
+            // Update confirmation modal with appointment details
+            document.getElementById('confirmName').textContent = `${firstName} ${lastName}`;
+            document.getElementById('confirmSpecialty').textContent = specialtyText;
+            document.getElementById('confirmDate').textContent = formattedDateDisplay;
+            document.getElementById('confirmTime').textContent = time;
+            document.getElementById('confirmDoctor').textContent = doctor;
+            
+            // Show confirmation modal
+            document.getElementById('confirmationModal').classList.add('active');
+            
+            // Store in localStorage for tracking page
+            const appointment = {
+                firstName,
+                lastName,
+                specialty: specialtyText,
+                date: formattedDateDisplay,
+                time,
+                doctor,
+                status: 'confirmed'
+            };
+            
+            localStorage.setItem('hsvAppointment', JSON.stringify(appointment));
+        });
+        
+        // Close modal when button is clicked
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('confirmationModal').classList.remove('active');
+            // Optionally redirect to the tracking page
+            // window.location.href = '/tracking';
+        });
+    </script>
+</body>
+</html>

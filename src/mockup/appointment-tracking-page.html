@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HSV Hospital - Appointment Tracking</title>
+  <style>
+    :root {
+      /* Primary colors */
+      --color-primary: #7c3aed; /* mauve 9 */
+      --color-primary-hover: #6f3ccf; /* mauve 10 */
+
+      /* Background */
+      --color-background: #f8fafc; /* slate 1 */
+      --color-surface: #e2e8f0; /* slate 3 */
+
+      /* Text */
+      --color-text: #0f172a; /* slate 12 */
+
+      /* Status */
+      --color-success: #22c55e; /* green 9 */
+      --color-error: #ef4444; /* red 9 */
+      
+      /* Additional colors */
+      --color-pending: #f59e0b; /* amber */
+      --color-neutral: #94a3b8; /* slate 7 */
+      --color-light: #ffffff;
+      --color-shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--color-background);
+      color: var(--color-text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--color-primary);
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background-color: var(--color-primary);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--color-text);
+    }
+
+    .card {
+      background-color: var(--color-light);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px var(--color-shadow);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .search-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    input, select {
+      padding: 12px 16px;
+      border: 1px solid var(--color-surface);
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+    }
+
+    button {
+      background-color: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: var(--color-primary-hover);
+    }
+
+    .search-button {
+      align-self: flex-start;
+      margin-top: 8px;
+    }
+
+    .result-card {
+      display: none;
+    }
+
+    .appointment {
+      margin-top: 32px;
+    }
+
+    .appointment-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .appointment-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .appointment-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .detail-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .detail-label {
+      font-size: 14px;
+      color: var(--color-neutral);
+    }
+
+    .detail-value {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .status-pending {
+      background-color: rgba(245, 158, 11, 0.1);
+      color: var(--color-pending);
+    }
+
+    .status-confirmed {
+      background-color: rgba(34, 197, 94, 0.1);
+      color: var(--color-success);
+    }
+
+    .status-cancelled {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--color-error);
+    }
+
+    /* Add pending example */
+    .status-pending::after {
+      content: '';
+    }
+
+    .appointment-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--color-primary);
+      border: 1px solid var(--color-primary);
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(124, 58, 237, 0.1);
+    }
+
+    .btn-danger {
+      background-color: var(--color-error);
+    }
+
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+
+    .no-result {
+      display: none;
+      text-align: center;
+      padding: 32px;
+      color: var(--color-neutral);
+    }
+
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--color-neutral);
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 16px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .appointment-details {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .appointment-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <div class="logo-icon">H</div>
+        HSV Hospital
+      </div>
+    </header>
+
+    <main>
+      <h1>Track Your Appointment</h1>
+
+      <div class="card">
+        <div class="search-form">
+          <p class="form-title">Search for your appointment</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" placeholder="Enter your last name">
+            </div>
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" placeholder="Enter your first name">
+            </div>
+          </div>
+          <p>OR</p>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email">
+          </div>
+          <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob" name="dob">
+          </div>
+          <button type="button" class="search-button">Search</button>
+        </div>
+      </div>
+
+      <div class="card result-card" id="resultCard">
+        <div class="appointment">
+          <div class="appointment-header">
+            <div class="appointment-title">Appointment #HSV20250530</div>
+            <span class="status-badge status-confirmed">Confirmed</span>
+          </div>
+          <div class="appointment-details">
+            <div class="detail-group">
+              <div class="detail-label">Patient</div>
+              <div class="detail-value">Smith John</div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Specialty</div>
+              <div class="detail-value">Cardiology</div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Doctor</div>
+              <div class="detail-value">Dr. Martin Lawrence</div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Date</div>
+              <div class="detail-value">May 30, 2025</div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Time</div>
+              <div class="detail-value">2:00 PM</div>
+            </div>
+          </div>
+          <div class="appointment-actions">
+            <button class="btn-secondary">Modify Appointment</button>
+            <button class="btn-danger">Cancel Appointment</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Example of appointment with Pending status -->
+      <div class="card result-card" style="display: block; margin-top: 20px;">
+        <div class="appointment">
+          <div class="appointment-header">
+            <div class="appointment-title">Appointment #HSV20250602</div>
+            <span class="status-badge status-pending">Pending</span>
+          </div>
+          <div class="appointment-details">
+            <div class="detail-group">
+              <div class="detail-label">Patient</div>
+              <div class="detail-value">Johnson Sarah</div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Specialty</div>
+              <div class="detail-value">Dermatology</div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Doctor</div>
+              <div class="detail-value">Dr. Emily Roberts</div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Date</div>
+              <div class="detail-value">June 2, 2025</div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Time</div>
+              <div class="detail-value">10:30 AM</div>
+            </div>
+          </div>
+          <div class="appointment-actions">
+            <button class="btn-secondary">Modify Appointment</button>
+            <button class="btn-danger">Cancel Appointment</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card no-result" id="noResult">
+        <p>No appointments found with the provided information.</p>
+        <p>Please check your information and try again.</p>
+      </div>
+    </main>
+
+    <footer>
+      <p>© 2025 HSV Hospital - All rights reserved</p>
+    </footer>
+  </div>
+</body>
+</html>
