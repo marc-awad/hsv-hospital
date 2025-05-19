@@ -1,4 +1,5 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
+import { createRouter, createWebHistory } from "vue-router"
+import type { RouteRecordRaw } from "vue-router"
 
 import HomePage from "../components/Pages/HomePage.vue"
 import BookingPage from "../components/Pages/BookingPage.vue"
