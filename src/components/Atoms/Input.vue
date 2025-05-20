@@ -11,7 +11,7 @@ const props = defineProps<{
 
 const labelClass = computed(() => {
   return [
-    "text-sm font-medium text-gray-700",
+    "font-medium text-gray-700 text-left",
     props.required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : "",
   ]
 })
