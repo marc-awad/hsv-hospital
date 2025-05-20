@@ -18,7 +18,7 @@ const textColor = colorMap[props.color ?? "primary"] ?? "#0f172a"
 
 <template>
   <h1
-    class="font-bold tracking-[-0.02em]"
+    class="font-semibold tracking-[-0.02em]"
     :style="{ color: textColor, fontSize: textSize }"
   >
     {{ title }}
