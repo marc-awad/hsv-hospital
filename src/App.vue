@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import NavBar from "./components/Organisms/NavBar.vue"
+import FooterCopyright from "./components/Organisms/FooterCopyright.vue"
 </script>
 
 <template>
@@ -9,6 +10,7 @@ import NavBar from "./components/Organisms/NavBar.vue"
     <main>
       <router-view />
     </main>
+    <FooterCopyright />
   </div>
 </template>
 
