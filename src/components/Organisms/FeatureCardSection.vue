@@ -16,7 +16,11 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+          <path d="M8 2v4"></path>
+          <path d="M16 2v4"></path>
+          <rect x="2" y="6" width="20" height="16" rx="2"></rect>
+          <path d="M12 14v4"></path>
+          <path d="M10 16h4"></path>
         </svg>
       </template>
     </FeatureCard>
@@ -37,7 +41,10 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+          <path
+            d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"
+          ></path>
+          <path d="M12 6v6l4 2"></path>
         </svg>
       </template>
     </FeatureCard>
@@ -58,7 +65,7 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
         </svg>
       </template>
     </FeatureCard>
