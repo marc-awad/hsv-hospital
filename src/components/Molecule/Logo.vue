@@ -2,7 +2,7 @@
 import LogoIcon from "../Atoms/LogoIcon.vue"
 import PageTitle from "../Atoms/PageTitle.vue"
 
-const props = defineProps<{ text: string }>()
+defineProps<{ text: string }>()
 </script>
 
 <template>
