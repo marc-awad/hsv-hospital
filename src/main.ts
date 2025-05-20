@@ -1,7 +1,7 @@
 import { createApp } from "vue"
-import "./style.css"
 import App from "./App.vue"
 import router from "./router"
+import "./style.css"
 
 // Firestore testing
 // import { app as firebaseApp, analytics } from "../src/firebase/firebase"
