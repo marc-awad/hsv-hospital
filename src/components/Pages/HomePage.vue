@@ -4,10 +4,10 @@
   >
     <PageTitle
       title="Book your appointment in just a few clicks"
-      :sizeRem="3.25"
+      :sizeRem="2.5"
       color="primary"
     />
-    <SecondaryText :shade="500" :sizeRem="1.6" :maxWidthPx="800">
+    <SecondaryText :shade="500" :sizeRem="1.25" :maxWidthPx="600">
       Access quality healthcare services with ease at HSV Hospital - your health
       is our priority since 2017.
     </SecondaryText>
