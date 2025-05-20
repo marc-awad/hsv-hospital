@@ -11,7 +11,7 @@
       Access quality healthcare services with ease at HSV Hospital - your health
       is our priority since 2017.
     </SecondaryText>
-    <div class="mt-4 flex gap-x-8 justify-center">
+    <div class="my-4 flex gap-x-8 justify-center mb-20">
       <Button to="/booking">
         <template #icon>
           <svg
@@ -55,6 +55,7 @@
         Track Appointment
       </Button>
     </div>
+    <FeatureCardSection/>
   </div>
 </template>
 
@@ -62,7 +63,8 @@
 import PageTitle from "../Atoms/PageTitle.vue"
 import SecondaryText from "../Atoms/SecondaryText.vue"
 import Button from "../Atoms/Button.vue"
+import FeatureCardSection from "../Organisms/FeatureCardSection.vue"
 export default {
-  components: { PageTitle, SecondaryText, Button },
+  components: { PageTitle, SecondaryText, Button, FeatureCardSection },
 }
 </script>
