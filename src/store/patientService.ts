@@ -140,7 +140,7 @@ export const getPatientById = async (
   patientId: string
 ): Promise<Patient | null> => {
   try {
-    const patientRef = doc(db, "patients", patientId)
+    // const patientRef = doc(db, "patients", patientId)
     const patientDoc = await getDocs(
       query(collection(db, "patients"), where("__name__", "==", patientId))
     )

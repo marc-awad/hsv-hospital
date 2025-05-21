@@ -239,18 +239,23 @@ const filteredDoctorsOptions = computed((): SelectOption[] => {
     .sort((a, b) => a.label.localeCompare(b.label))
 })
 
-// Fonctions de chargement des données
+// Fonction de chargement des spécialités
 const loadSpecialties = async (): Promise<void> => {
   try {
     loadingSpecialties.value = true
     specialtiesOptions.value = await fetchSpecialties()
-  } catch (error) {
-    alert(error.message)
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      alert(error.message)
+    } else {
+      alert(String(error))
+    }
   } finally {
     loadingSpecialties.value = false
   }
 }
 
+// Fonction de chargement des médecins par spécialité
 const loadDoctorsBySpecialty = async (specialtyId: string): Promise<void> => {
   if (!specialtyId) return
 
@@ -270,7 +275,7 @@ const loadDoctorsBySpecialty = async (specialtyId: string): Promise<void> => {
   }
 }
 
-// Gestionnaires d'événements
+// Gestionnaire de changement de spécialité
 const onSpecialtyChange = async (newSpecialty: string): Promise<void> => {
   doctor.value = ""
 
@@ -284,6 +289,7 @@ const onSpecialtyChange = async (newSpecialty: string): Promise<void> => {
   }
 }
 
+// Fonction de soumission du formulaire
 const submitForm = async (): Promise<void> => {
   try {
     isSubmitting.value = true
@@ -331,17 +337,20 @@ const submitForm = async (): Promise<void> => {
 
     alert("Rendez-vous soumis avec succès!")
     resetForm()
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Erreur lors de l'ajout du document: ", error)
-    alert(
-      error.message ||
-        "Échec de la soumission du rendez-vous. Veuillez réessayer."
-    )
+
+    if (error instanceof Error) {
+      alert(error.message)
+    } else {
+      alert("Échec de la soumission du rendez-vous. Veuillez réessayer.")
+    }
   } finally {
     isSubmitting.value = false
   }
 }
 
+// Fonction de réinitialisation du formulaire
 const resetForm = (): void => {
   firstName.value = ""
   lastName.value = ""
