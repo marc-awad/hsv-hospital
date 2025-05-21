@@ -5,15 +5,15 @@
       >Easily find and manage your upcoming appointment by providing your
       personal information below.</SecondaryText
     >
+    <FormSearchAppointment />
   </div>
 </template>
 
 <script>
 import PageTitle from "../Atoms/PageTitle.vue"
 import SecondaryText from "../Atoms/SecondaryText.vue"
+import FormSearchAppointment from "../Organisms/FormSearchAppointment.vue"
 export default {
-  components: { PageTitle, SecondaryText },
+  components: { PageTitle, SecondaryText, FormSearchAppointment },
 }
 </script>
-
-<style scoped></style>
