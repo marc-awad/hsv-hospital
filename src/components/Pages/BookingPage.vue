@@ -6,12 +6,22 @@
       specialists.</SecondaryText
     >
   </div>
+  <div
+    class="w-full max-w-4xl mx-auto px-6 my-14 rounded-md py-6"
+    style="
+      box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1),
+        0 -8px 15px -3px rgba(0, 0, 0, 0.1);
+    "
+  >
+    <FormAppointment />
+  </div>
 </template>
 
 <script>
 import PageTitle from "../Atoms/PageTitle.vue"
 import SecondaryText from "../Atoms/SecondaryText.vue"
+import FormAppointment from "../Organisms/FormAppointment.vue"
 export default {
-  components: { PageTitle, SecondaryText },
+  components: { PageTitle, SecondaryText, FormAppointment },
 }
 </script>
