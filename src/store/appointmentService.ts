@@ -23,6 +23,8 @@ export interface Appointment {
   time: string // format "HH:mm"
   status: string // "pending", "confirmed", "cancelled", etc.
   patientId?: string // Optionnel, pour lier à un patient existant
+  email?: string // Email du patient pour recherche
+  phone?: string // Numéro de téléphone pour recherche
   createdAt?: any
   updatedAt?: any
 }
@@ -36,6 +38,8 @@ export interface CreateAppointmentData {
   time: string
   status: string
   patientId?: string
+  email?: string
+  phone?: string
 }
 
 /**
@@ -211,6 +215,98 @@ export const deleteAppointment = async (
 
 /**
  * Récupère tous les rendez-vous d'un patient par email
+ * @param email - L'email du patient
+ * @returns Une liste des rendez-vous du patient
+ */
+export const getAppointmentsByEmail = async (
+  email: string
+): Promise<Appointment[]> => {
+  try {
+    const appointmentsRef = collection(db, "appointments")
+    const querySnapshot = await getDocs(
+      query(
+        appointmentsRef,
+        where("email", "==", email),
+        orderBy("date"),
+        orderBy("time")
+      )
+    )
+
+    return querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Appointment[]
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des rendez-vous par email:",
+      error
+    )
+    throw new Error(
+      "Impossible de récupérer les rendez-vous pour cet email. Veuillez réessayer."
+    )
+  }
+}
+
+/**
+ * Récupère tous les rendez-vous d'un patient par numéro de téléphone
+ * @param phone - Le numéro de téléphone du patient
+ * @returns Une liste des rendez-vous du patient
+ */
+export const getAppointmentsByPhone = async (
+  phone: string
+): Promise<Appointment[]> => {
+  try {
+    const appointmentsRef = collection(db, "appointments")
+    const querySnapshot = await getDocs(
+      query(
+        appointmentsRef,
+        where("phone", "==", phone),
+        orderBy("date"),
+        orderBy("time")
+      )
+    )
+
+    return querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Appointment[]
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des rendez-vous par téléphone:",
+      error
+    )
+    throw new Error(
+      "Impossible de récupérer les rendez-vous pour ce numéro de téléphone. Veuillez réessayer."
+    )
+  }
+}
+
+/**
+ * Récupère tous les rendez-vous d'un patient par email ou phone
+ * @param value - L'email ou le téléphone du patient
+ * @returns Une liste des rendez-vous du patient
+ */
+export const getAppointmentsByEmailOrPhone = async (
+  value: string
+): Promise<Appointment[]> => {
+  try {
+    // Vérifie d'abord si c'est un email (contient @)
+    if (value.includes("@")) {
+      return getAppointmentsByEmail(value)
+    } else {
+      // Sinon considère comme numéro de téléphone
+      return getAppointmentsByPhone(value)
+    }
+  } catch (error) {
+    console.error("Erreur lors de la récupération des rendez-vous:", error)
+    throw new Error(
+      "Impossible de récupérer les rendez-vous. Veuillez réessayer."
+    )
+  }
+}
+
+/**
+ * Récupère tous les rendez-vous d'un patient par nom
  * @param firstName - Le prénom du patient
  * @param lastName - Le nom du patient
  * @returns Une liste des rendez-vous du patient
