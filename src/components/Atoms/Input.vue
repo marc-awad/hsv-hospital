@@ -7,6 +7,11 @@ const props = defineProps<{
   type?: string
   placeholder?: string
   required?: boolean
+  modelValue: string
+}>()
+
+const emit = defineEmits<{
+  (e: "update:modelValue", value: string): void
 }>()
 
 const labelClass = computed(() => {
@@ -15,6 +20,10 @@ const labelClass = computed(() => {
     props.required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : "",
   ]
 })
+
+const updateValue = (event: Event) => {
+  emit("update:modelValue", (event.target as HTMLInputElement).value)
+}
 </script>
 
 <template>
@@ -27,6 +36,8 @@ const labelClass = computed(() => {
       :type="type || 'text'"
       :placeholder="placeholder"
       :required="required"
+      :value="modelValue"
+      @input="updateValue"
       class="form-input w-full px-4 py-3 border rounded-md text-base text-gray-900 bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
     />
   </div>
