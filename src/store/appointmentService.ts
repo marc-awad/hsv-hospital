@@ -5,6 +5,7 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
   doc,
   updateDoc,
   deleteDoc,
@@ -212,7 +213,6 @@ export const deleteAppointment = async (
     )
   }
 }
-
 /**
  * Récupère tous les rendez-vous d'un patient par email
  * @param email - L'email du patient
@@ -232,10 +232,38 @@ export const getAppointmentsByEmail = async (
       )
     )
 
-    return querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Appointment[]
+    const appointments: Appointment[] = []
+
+    for (const appointmentDoc of querySnapshot.docs) {
+      const appointmentData = {
+        id: appointmentDoc.id,
+        ...appointmentDoc.data(),
+      } as Appointment
+
+      // Récupérer les informations du docteur
+      if (appointmentData.doctor) {
+        // appointmentData.doctor contient l'ID du docteur
+        try {
+          const doctorDoc = await getDoc(
+            doc(db, "doctors", appointmentData.doctor)
+          )
+          if (doctorDoc.exists()) {
+            const doctorData = doctorDoc.data()
+            appointmentData.doctor = `${doctorData.firstName} ${doctorData.lastName}` // Remplacer par firstName + lastName
+          }
+        } catch (doctorError) {
+          console.warn(
+            `Impossible de récupérer les informations du docteur ${appointmentData.doctor}:`,
+            doctorError
+          )
+          // Garder l'ID original en cas d'erreur
+        }
+      }
+
+      appointments.push(appointmentData)
+    }
+
+    return appointments
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des rendez-vous par email:",
@@ -266,10 +294,38 @@ export const getAppointmentsByPhone = async (
       )
     )
 
-    return querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Appointment[]
+    const appointments: Appointment[] = []
+
+    for (const appointmentDoc of querySnapshot.docs) {
+      const appointmentData = {
+        id: appointmentDoc.id,
+        ...appointmentDoc.data(),
+      } as Appointment
+
+      // Récupérer les informations du docteur
+      if (appointmentData.doctor) {
+        // appointmentData.doctor contient l'ID du docteur
+        try {
+          const doctorDoc = await getDoc(
+            doc(db, "doctors", appointmentData.doctor)
+          )
+          if (doctorDoc.exists()) {
+            const doctorData = doctorDoc.data()
+            appointmentData.doctor = `${doctorData.firstName} ${doctorData.lastName}` // Remplacer par firstName + lastName
+          }
+        } catch (doctorError) {
+          console.warn(
+            `Impossible de récupérer les informations du docteur ${appointmentData.doctor}:`,
+            doctorError
+          )
+          // Garder l'ID original en cas d'erreur
+        }
+      }
+
+      appointments.push(appointmentData)
+    }
+
+    return appointments
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des rendez-vous par téléphone:",

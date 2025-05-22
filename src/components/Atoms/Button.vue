@@ -3,7 +3,7 @@ import { RouterLink } from "vue-router"
 
 const props = defineProps<{
   to?: string
-  variant?: "primary" | "secondary" | "tertiary"
+  variant?: "primary" | "secondary" | "tertiary" | "danger"
 }>()
 
 const variant = props.variant ?? "primary"
@@ -16,6 +16,8 @@ const classes =
     ? `${baseClasses} bg-primary text-white hover:bg-primary-hover`
     : variant === "secondary"
     ? `${baseClasses} bg-white text-primary border border-primary hover:bg-gray-200 hover:text-primary`
+    : variant === "danger"
+    ? `${baseClasses} bg-red-600 text-white hover:bg-red-700`
     : `${baseClasses} bg-white text-black border border-gray-400 hover:bg-gray-200 hover:text-black`
 </script>
 

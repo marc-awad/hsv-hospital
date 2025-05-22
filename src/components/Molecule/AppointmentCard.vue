@@ -2,36 +2,54 @@
   <div
     class="border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
   >
-    <div class="flex justify-between items-start mb-4">
+    <!-- Ligne 1: Patient, Specialty, Doctor -->
+    <div class="grid grid-cols-3 gap-4 mb-6 text-left">
       <div>
-        <h3 class="text-lg font-semibold">
+        <p class="text-xs text-gray-500 tracking-wide mb-2">Patient</p>
+        <p class="font-medium">
           {{ appointment.firstName }} {{ appointment.lastName }}
-        </h3>
-        <p class="text-gray-600">
-          {{ appointment.specialty }} with Dr. {{ appointment.doctor }}
         </p>
       </div>
-      <div class="text-right">
-        <p class="font-medium">{{ formatDate(appointment.date) }}</p>
-        <p class="text-gray-600">{{ formatTime(appointment.time) }}</p>
+      <div>
+        <p class="text-xs text-gray-500 tracking-wide mb-2">Specialty</p>
+        <p class="font-medium">
+          {{ formatSpecialty(appointment.specialty) }}
+        </p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 tracking-wide mb-2">Doctor</p>
+        <p class="font-medium">Dr. {{ appointment.doctor }}</p>
       </div>
     </div>
 
-    <div class="flex items-center text-sm mb-4">
-      <StatusBadge :status="appointment.status" />
+    <!-- Ligne 2: Date, Time, Status -->
+    <div class="grid grid-cols-3 gap-4 mb-6 text-left">
+      <div>
+        <p class="text-xs text-gray-500 tracking-wide mb-2">Date</p>
+        <p class="font-medium">{{ formatDate(appointment.date) }}</p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 tracking-wide mb-2">Time</p>
+        <p class="font-medium">{{ formatTime(appointment.time) }}</p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 tracking-wide mb-2">Status</p>
+        <StatusBadge :status="appointment.status" />
+      </div>
     </div>
 
-    <div class="flex justify-end space-x-3 mt-4">
+    <!-- Ligne 3: Boutons alignés à gauche -->
+    <div class="flex justify-start space-x-3 mt-4">
       <Button
         v-if="appointment.status !== 'cancelled'"
-        size="sm"
+        variant="secondary"
         @click="$emit('modify', appointment)"
       >
         Modify Appointment
       </Button>
       <Button
         v-if="appointment.status !== 'cancelled'"
-        size="sm"
+        variant="danger"
         @click="$emit('cancel', appointment)"
       >
         Cancel Appointment
@@ -71,6 +89,16 @@ export default {
   emits: ["modify", "cancel"],
 
   methods: {
+    formatSpecialty(specialty) {
+      if (specialty === "generalmedicine") {
+        return "General Medicine"
+      }
+      // Pour les autres spécialités, mettre une majuscule à la première lettre
+      return (
+        specialty.charAt(0).toUpperCase() + specialty.slice(1).toLowerCase()
+      )
+    },
+
     formatDate(dateString) {
       const options = {
         weekday: "long",
@@ -78,11 +106,24 @@ export default {
         month: "long",
         day: "numeric",
       }
-      return new Date(dateString).toLocaleDateString(undefined, options)
+      // Spécifier la locale anglaise 'en-US' ou 'en-GB'
+      return new Date(dateString).toLocaleDateString("en-US", options)
     },
 
     formatTime(timeString) {
-      return timeString
+      // Si vous voulez aussi formater l'heure en format anglais (12h avec AM/PM)
+      const [hours, minutes] = timeString.split(":")
+      const date = new Date()
+      date.setHours(parseInt(hours), parseInt(minutes))
+
+      return date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })
+
+      // Ou simplement retourner le format 24h original :
+      // return timeString
     },
   },
 }
