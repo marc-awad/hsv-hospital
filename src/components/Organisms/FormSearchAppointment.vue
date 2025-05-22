@@ -74,7 +74,8 @@ import {
   showErrorAlert,
   showSuccessAlert,
   showMissingFieldAlert,
-  showConfirmDialog
+  showConfirmDialog,
+  showModifyAppointmentModalSimple
 } from "../../store/sweetalert"
 
 export default {
@@ -113,9 +114,8 @@ export default {
     }
 
     const modifyAppointmentTime = (appointment) => {
-      // Rediriger vers la page de modification ou afficher un modal
+      showModifyAppointmentModalSimple(appointment)
       console.log("Modify appointment:", appointment)
-      // Vous pouvez implémenter la navigation ou afficher un modal ici
     }
 
     const confirmCancelAppointment = async (appointment) => {
