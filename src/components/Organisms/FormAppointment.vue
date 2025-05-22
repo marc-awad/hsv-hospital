@@ -315,6 +315,10 @@ const submitForm = async (): Promise<void> => {
       showErrorAlert("Please fill in all required fields.")
       return
     }
+    if (!/^\+?[0-9\s\-\.]{8,15}$/.test(phone.value)) {
+      showErrorAlert("Please enter a valid phone number.")
+      return
+    }
     const selectedDate = new Date(date.value)
     const today = new Date()
     today.setHours(0, 0, 0, 0)
