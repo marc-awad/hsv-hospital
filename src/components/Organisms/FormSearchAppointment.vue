@@ -47,60 +47,13 @@
       </div>
 
       <div v-else class="space-y-6">
-        <div
+        <AppointmentCard
           v-for="appointment in appointments"
           :key="appointment.id"
-          class="border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
-        >
-          <div class="flex justify-between items-start mb-4">
-            <div>
-              <h3 class="text-lg font-semibold">
-                {{ appointment.firstName }} {{ appointment.lastName }}
-              </h3>
-              <p class="text-gray-600">
-                {{ appointment.specialty }} with Dr. {{ appointment.doctor }}
-              </p>
-            </div>
-            <div class="text-right">
-              <p class="font-medium">{{ formatDate(appointment.date) }}</p>
-              <p class="text-gray-600">{{ formatTime(appointment.time) }}</p>
-            </div>
-          </div>
-
-          <div class="flex items-center text-sm mb-4">
-            <span
-              class="px-2 py-1 rounded-full text-xs font-medium"
-              :class="{
-                'bg-green-100 text-green-800':
-                  appointment.status === 'confirmed',
-                'bg-yellow-100 text-yellow-800':
-                  appointment.status === 'pending',
-                'bg-red-100 text-red-800': appointment.status === 'cancelled',
-              }"
-            >
-              {{ capitalizeFirstLetter(appointment.status) }}
-            </span>
-          </div>
-
-          <div class="flex justify-end space-x-3 mt-4">
-            <Button
-              v-if="appointment.status !== 'cancelled'"
-              variant="outline"
-              size="sm"
-              @click="modifyAppointment(appointment)"
-            >
-              Modify Appointment
-            </Button>
-            <Button
-              v-if="appointment.status !== 'cancelled'"
-              variant="danger"
-              size="sm"
-              @click="confirmCancelAppointment(appointment)"
-            >
-              Cancel Appointment
-            </Button>
-          </div>
-        </div>
+          :appointment="appointment"
+          @modify="modifyAppointment"
+          @cancel="confirmCancelAppointment"
+        />
       </div>
     </div>
   </div>
@@ -111,6 +64,7 @@ import { ref } from "vue"
 import PageTitle from "../Atoms/PageTitle.vue"
 import Button from "../Atoms/Button.vue"
 import Input from "../Atoms/Input.vue"
+import AppointmentCard from "../Molecule/AppointmentCard.vue"
 import {
   getAppointmentsByEmail,
   getAppointmentsByPhone,
@@ -118,7 +72,7 @@ import {
 } from "../../store/appointmentService"
 
 export default {
-  components: { PageTitle, Button, Input },
+  components: { PageTitle, Button, Input, AppointmentCard },
 
   setup() {
     const email = ref("")
@@ -152,24 +106,6 @@ export default {
       }
     }
 
-    const formatDate = (dateString) => {
-      const options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }
-      return new Date(dateString).toLocaleDateString(undefined, options)
-    }
-
-    const formatTime = (timeString) => {
-      return timeString
-    }
-
-    const capitalizeFirstLetter = (string) => {
-      return string.charAt(0).toUpperCase() + string.slice(1)
-    }
-
     const modifyAppointment = (appointment) => {
       // Rediriger vers la page de modification ou afficher un modal
       console.log("Modify appointment:", appointment)
@@ -177,6 +113,16 @@ export default {
     }
 
     const confirmCancelAppointment = (appointment) => {
+      const formatDate = (dateString) => {
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }
+        return new Date(dateString).toLocaleDateString(undefined, options)
+      }
+
       if (
         confirm(
           `Are you sure you want to cancel your appointment with Dr. ${
@@ -218,9 +164,6 @@ export default {
       loading,
       searchPerformed,
       searchAppointments,
-      formatDate,
-      formatTime,
-      capitalizeFirstLetter,
       modifyAppointment,
       confirmCancelAppointment,
     }
