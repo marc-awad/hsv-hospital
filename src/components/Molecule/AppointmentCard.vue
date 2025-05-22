@@ -44,7 +44,7 @@
       class="flex justify-start space-x-3 mt-4"
     >
       <Button variant="secondary" @click="$emit('modify', appointment)">
-        Modify Appointment
+        Modify Appointment Time
       </Button>
       <Button variant="danger" @click="$emit('cancel', appointment)">
         Cancel Appointment

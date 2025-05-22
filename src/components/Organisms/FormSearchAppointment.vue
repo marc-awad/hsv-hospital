@@ -51,7 +51,7 @@
           v-for="appointment in appointments"
           :key="appointment.id"
           :appointment="appointment"
-          @modify="modifyAppointment"
+          @modify="modifyAppointmentTime"
           @cancel="confirmCancelAppointment"
         />
       </div>
@@ -112,7 +112,7 @@ export default {
       }
     }
 
-    const modifyAppointment = (appointment) => {
+    const modifyAppointmentTime = (appointment) => {
       // Rediriger vers la page de modification ou afficher un modal
       console.log("Modify appointment:", appointment)
       // Vous pouvez implémenter la navigation ou afficher un modal ici
@@ -171,7 +171,7 @@ export default {
       loading,
       searchPerformed,
       searchAppointments,
-      modifyAppointment,
+      modifyAppointmentTime,
       confirmCancelAppointment,
     }
   },

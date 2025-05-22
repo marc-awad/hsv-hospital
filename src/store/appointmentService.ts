@@ -19,13 +19,13 @@ export interface Appointment {
   firstName: string
   lastName: string
   specialty: string
-  date: string // format ISO "YYYY-MM-DD"
+  date: string // ISO format "YYYY-MM-DD"
   doctor: string
   time: string // format "HH:mm"
   status: string // "pending", "confirmed", "cancelled", etc.
-  patientId?: string // Optionnel, pour lier à un patient existant
-  email?: string // Email du patient pour recherche
-  phone?: string // Numéro de téléphone pour recherche
+  patientId?: string // Optional, to link to an existing patient
+  email?: string // Patient email for search
+  phone?: string // Phone number for search
   createdAt?: any
   updatedAt?: any
 }
@@ -44,9 +44,9 @@ export interface CreateAppointmentData {
 }
 
 /**
- * Crée un nouveau rendez-vous dans la base de données
- * @param appointmentData - Les données du rendez-vous à créer
- * @returns L'ID du rendez-vous créé
+ * Creates a new appointment in the database
+ * @param appointmentData - The appointment data to create
+ * @returns The ID of the created appointment
  */
 export const createAppointment = async (
   appointmentData: CreateAppointmentData
@@ -64,16 +64,16 @@ export const createAppointment = async (
     )
     return appointmentRef.id
   } catch (error) {
-    console.error("Erreur lors de la création du rendez-vous:", error)
-    throw new Error("Impossible de créer le rendez-vous. Veuillez réessayer.")
+    console.error("Error creating appointment:", error)
+    throw new Error("Unable to create appointment. Please try again.")
   }
 }
 
 /**
- * Met à jour un rendez-vous existant
- * @param appointmentId - L'ID du rendez-vous à mettre à jour
- * @param appointmentData - Les nouvelles données du rendez-vous
- * @returns L'ID du rendez-vous mis à jour
+ * Updates an existing appointment
+ * @param appointmentId - The ID of the appointment to update
+ * @param appointmentData - The new appointment data
+ * @returns The ID of the updated appointment
  */
 export const updateAppointment = async (
   appointmentId: string,
@@ -89,17 +89,15 @@ export const updateAppointment = async (
     await updateDoc(appointmentRef, updatedData)
     return appointmentId
   } catch (error) {
-    console.error("Erreur lors de la mise à jour du rendez-vous:", error)
-    throw new Error(
-      "Impossible de mettre à jour le rendez-vous. Veuillez réessayer."
-    )
+    console.error("Error updating appointment:", error)
+    throw new Error("Unable to update appointment. Please try again.")
   }
 }
 
 /**
- * Récupère un rendez-vous par son ID
- * @param appointmentId - L'ID du rendez-vous à récupérer
- * @returns Le rendez-vous trouvé ou null si aucun rendez-vous n'est trouvé
+ * Retrieves an appointment by its ID
+ * @param appointmentId - The ID of the appointment to retrieve
+ * @returns The found appointment or null if no appointment is found
  */
 export const getAppointmentById = async (
   appointmentId: string
@@ -122,16 +120,14 @@ export const getAppointmentById = async (
 
     return null
   } catch (error) {
-    console.error("Erreur lors de la récupération du rendez-vous:", error)
-    throw new Error(
-      "Impossible de récupérer le rendez-vous. Veuillez réessayer."
-    )
+    console.error("Error retrieving appointment:", error)
+    throw new Error("Unable to retrieve appointment. Please try again.")
   }
 }
 
 /**
- * Récupère tous les rendez-vous (utile pour l'administration)
- * @returns Une liste de tous les rendez-vous
+ * Retrieves all appointments (useful for administration)
+ * @returns A list of all appointments
  */
 export const getAllAppointments = async (): Promise<Appointment[]> => {
   try {
@@ -145,17 +141,15 @@ export const getAllAppointments = async (): Promise<Appointment[]> => {
       ...doc.data(),
     })) as Appointment[]
   } catch (error) {
-    console.error("Erreur lors de la récupération des rendez-vous:", error)
-    throw new Error(
-      "Impossible de récupérer la liste des rendez-vous. Veuillez réessayer."
-    )
+    console.error("Error retrieving appointments:", error)
+    throw new Error("Unable to retrieve appointments list. Please try again.")
   }
 }
 
 /**
- * Annule un rendez-vous en modifiant son statut
- * @param appointmentId - L'ID du rendez-vous à annuler
- * @returns L'ID du rendez-vous annulé
+ * Cancels an appointment by changing its status
+ * @param appointmentId - The ID of the appointment to cancel
+ * @returns The ID of the cancelled appointment
  */
 export const cancelAppointment = async (
   appointmentId: string
@@ -168,15 +162,15 @@ export const cancelAppointment = async (
     })
     return appointmentId
   } catch (error) {
-    console.error("Erreur lors de l'annulation du rendez-vous:", error)
-    throw new Error("Impossible d'annuler le rendez-vous. Veuillez réessayer.")
+    console.error("Error cancelling appointment:", error)
+    throw new Error("Unable to cancel appointment. Please try again.")
   }
 }
 
 /**
- * Confirme un rendez-vous en modifiant son statut
- * @param appointmentId - L'ID du rendez-vous à confirmer
- * @returns L'ID du rendez-vous confirmé
+ * Confirms an appointment by changing its status
+ * @param appointmentId - The ID of the appointment to confirm
+ * @returns The ID of the confirmed appointment
  */
 export const confirmAppointment = async (
   appointmentId: string
@@ -189,16 +183,14 @@ export const confirmAppointment = async (
     })
     return appointmentId
   } catch (error) {
-    console.error("Erreur lors de la confirmation du rendez-vous:", error)
-    throw new Error(
-      "Impossible de confirmer le rendez-vous. Veuillez réessayer."
-    )
+    console.error("Error confirming appointment:", error)
+    throw new Error("Unable to confirm appointment. Please try again.")
   }
 }
 
 /**
- * Supprime un rendez-vous de la base de données
- * @param appointmentId - L'ID du rendez-vous à supprimer
+ * Deletes an appointment from the database
+ * @param appointmentId - The ID of the appointment to delete
  */
 export const deleteAppointment = async (
   appointmentId: string
@@ -207,16 +199,15 @@ export const deleteAppointment = async (
     const appointmentRef = doc(db, "appointments", appointmentId)
     await deleteDoc(appointmentRef)
   } catch (error) {
-    console.error("Erreur lors de la suppression du rendez-vous:", error)
-    throw new Error(
-      "Impossible de supprimer le rendez-vous. Veuillez réessayer."
-    )
+    console.error("Error deleting appointment:", error)
+    throw new Error("Unable to delete appointment. Please try again.")
   }
 }
+
 /**
- * Récupère tous les rendez-vous d'un patient par email
- * @param email - L'email du patient
- * @returns Une liste des rendez-vous du patient
+ * Retrieves all appointments for a patient by email
+ * @param email - The patient's email
+ * @returns A list of the patient's appointments
  */
 export const getAppointmentsByEmail = async (
   email: string
@@ -240,23 +231,23 @@ export const getAppointmentsByEmail = async (
         ...appointmentDoc.data(),
       } as Appointment
 
-      // Récupérer les informations du docteur
+      // Retrieve doctor information
       if (appointmentData.doctor) {
-        // appointmentData.doctor contient l'ID du docteur
+        // appointmentData.doctor contains the doctor's ID
         try {
           const doctorDoc = await getDoc(
             doc(db, "doctors", appointmentData.doctor)
           )
           if (doctorDoc.exists()) {
             const doctorData = doctorDoc.data()
-            appointmentData.doctor = `${doctorData.firstName} ${doctorData.lastName}` // Remplacer par firstName + lastName
+            appointmentData.doctor = `${doctorData.firstName} ${doctorData.lastName}` // Replace with firstName + lastName
           }
         } catch (doctorError) {
           console.warn(
-            `Impossible de récupérer les informations du docteur ${appointmentData.doctor}:`,
+            `Unable to retrieve doctor information ${appointmentData.doctor}:`,
             doctorError
           )
-          // Garder l'ID original en cas d'erreur
+          // Keep original ID in case of error
         }
       }
 
@@ -265,20 +256,17 @@ export const getAppointmentsByEmail = async (
 
     return appointments
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des rendez-vous par email:",
-      error
-    )
+    console.error("Error retrieving appointments by email:", error)
     throw new Error(
-      "Impossible de récupérer les rendez-vous pour cet email. Veuillez réessayer."
+      "Unable to retrieve appointments for this email. Please try again."
     )
   }
 }
 
 /**
- * Récupère tous les rendez-vous d'un patient par numéro de téléphone
- * @param phone - Le numéro de téléphone du patient
- * @returns Une liste des rendez-vous du patient
+ * Retrieves all appointments for a patient by phone number
+ * @param phone - The patient's phone number
+ * @returns A list of the patient's appointments
  */
 export const getAppointmentsByPhone = async (
   phone: string
@@ -302,23 +290,23 @@ export const getAppointmentsByPhone = async (
         ...appointmentDoc.data(),
       } as Appointment
 
-      // Récupérer les informations du docteur
+      // Retrieve doctor information
       if (appointmentData.doctor) {
-        // appointmentData.doctor contient l'ID du docteur
+        // appointmentData.doctor contains the doctor's ID
         try {
           const doctorDoc = await getDoc(
             doc(db, "doctors", appointmentData.doctor)
           )
           if (doctorDoc.exists()) {
             const doctorData = doctorDoc.data()
-            appointmentData.doctor = `${doctorData.firstName} ${doctorData.lastName}` // Remplacer par firstName + lastName
+            appointmentData.doctor = `${doctorData.firstName} ${doctorData.lastName}` // Replace with firstName + lastName
           }
         } catch (doctorError) {
           console.warn(
-            `Impossible de récupérer les informations du docteur ${appointmentData.doctor}:`,
+            `Unable to retrieve doctor information ${appointmentData.doctor}:`,
             doctorError
           )
-          // Garder l'ID original en cas d'erreur
+          // Keep original ID in case of error
         }
       }
 
@@ -327,45 +315,40 @@ export const getAppointmentsByPhone = async (
 
     return appointments
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des rendez-vous par téléphone:",
-      error
-    )
+    console.error("Error retrieving appointments by phone:", error)
     throw new Error(
-      "Impossible de récupérer les rendez-vous pour ce numéro de téléphone. Veuillez réessayer."
+      "Unable to retrieve appointments for this phone number. Please try again."
     )
   }
 }
 
 /**
- * Récupère tous les rendez-vous d'un patient par email ou phone
- * @param value - L'email ou le téléphone du patient
- * @returns Une liste des rendez-vous du patient
+ * Retrieves all appointments for a patient by email or phone
+ * @param value - The patient's email or phone
+ * @returns A list of the patient's appointments
  */
 export const getAppointmentsByEmailOrPhone = async (
   value: string
 ): Promise<Appointment[]> => {
   try {
-    // Vérifie d'abord si c'est un email (contient @)
+    // First check if it's an email (contains @)
     if (value.includes("@")) {
       return getAppointmentsByEmail(value)
     } else {
-      // Sinon considère comme numéro de téléphone
+      // Otherwise consider it as a phone number
       return getAppointmentsByPhone(value)
     }
   } catch (error) {
-    console.error("Erreur lors de la récupération des rendez-vous:", error)
-    throw new Error(
-      "Impossible de récupérer les rendez-vous. Veuillez réessayer."
-    )
+    console.error("Error retrieving appointments:", error)
+    throw new Error("Unable to retrieve appointments. Please try again.")
   }
 }
 
 /**
- * Récupère tous les rendez-vous d'un patient par nom
- * @param firstName - Le prénom du patient
- * @param lastName - Le nom du patient
- * @returns Une liste des rendez-vous du patient
+ * Retrieves all appointments for a patient by name
+ * @param firstName - The patient's first name
+ * @param lastName - The patient's last name
+ * @returns A list of the patient's appointments
  */
 export const getAppointmentsByPatientName = async (
   firstName: string,
@@ -388,20 +371,17 @@ export const getAppointmentsByPatientName = async (
       ...doc.data(),
     })) as Appointment[]
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des rendez-vous du patient:",
-      error
-    )
+    console.error("Error retrieving patient appointments:", error)
     throw new Error(
-      "Impossible de récupérer les rendez-vous du patient. Veuillez réessayer."
+      "Unable to retrieve patient appointments. Please try again."
     )
   }
 }
 
 /**
- * Récupère tous les rendez-vous d'un patient par son ID
- * @param patientId - L'ID du patient
- * @returns Une liste des rendez-vous du patient
+ * Retrieves all appointments for a patient by their ID
+ * @param patientId - The patient's ID
+ * @returns A list of the patient's appointments
  */
 export const getAppointmentsByPatientId = async (
   patientId: string
@@ -422,22 +402,19 @@ export const getAppointmentsByPatientId = async (
       ...doc.data(),
     })) as Appointment[]
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des rendez-vous du patient:",
-      error
-    )
+    console.error("Error retrieving patient appointments:", error)
     throw new Error(
-      "Impossible de récupérer les rendez-vous du patient. Veuillez réessayer."
+      "Unable to retrieve patient appointments. Please try again."
     )
   }
 }
 
 /**
- * Vérifie si un créneau horaire est disponible
- * @param date - La date du rendez-vous (format ISO "YYYY-MM-DD")
- * @param time - L'heure du rendez-vous (format "HH:mm")
- * @param doctor - Le nom du médecin
- * @returns true si le créneau est disponible, false sinon
+ * Checks if a time slot is available
+ * @param date - The appointment date (ISO format "YYYY-MM-DD")
+ * @param time - The appointment time (format "HH:mm")
+ * @param doctor - The doctor's name
+ * @returns true if the time slot is available, false otherwise
  */
 export const isTimeSlotAvailable = async (
   date: string,
@@ -456,19 +433,17 @@ export const isTimeSlotAvailable = async (
       )
     )
 
-    return querySnapshot.empty // Si la requête est vide, le créneau est disponible
+    return querySnapshot.empty // If the query is empty, the time slot is available
   } catch (error) {
-    console.error("Erreur lors de la vérification du créneau horaire:", error)
-    throw new Error(
-      "Impossible de vérifier la disponibilité. Veuillez réessayer."
-    )
+    console.error("Error checking time slot availability:", error)
+    throw new Error("Unable to check availability. Please try again.")
   }
 }
 
 /**
- * Récupère tous les rendez-vous pour une date donnée
- * @param date - La date des rendez-vous à récupérer (format ISO "YYYY-MM-DD")
- * @returns Une liste des rendez-vous pour la date spécifiée
+ * Retrieves all appointments for a given date
+ * @param date - The date of appointments to retrieve (ISO format "YYYY-MM-DD")
+ * @returns A list of appointments for the specified date
  */
 export const getAppointmentsByDate = async (
   date: string
@@ -484,20 +459,17 @@ export const getAppointmentsByDate = async (
       ...doc.data(),
     })) as Appointment[]
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des rendez-vous par date:",
-      error
-    )
+    console.error("Error retrieving appointments by date:", error)
     throw new Error(
-      "Impossible de récupérer les rendez-vous pour cette date. Veuillez réessayer."
+      "Unable to retrieve appointments for this date. Please try again."
     )
   }
 }
 
 /**
- * Récupère tous les rendez-vous pour un médecin donné
- * @param doctor - Le nom du médecin
- * @returns Une liste des rendez-vous pour le médecin spécifié
+ * Retrieves all appointments for a given doctor
+ * @param doctor - The doctor's name
+ * @returns A list of appointments for the specified doctor
  */
 export const getAppointmentsByDoctor = async (
   doctor: string
@@ -518,20 +490,17 @@ export const getAppointmentsByDoctor = async (
       ...doc.data(),
     })) as Appointment[]
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des rendez-vous par médecin:",
-      error
-    )
+    console.error("Error retrieving appointments by doctor:", error)
     throw new Error(
-      "Impossible de récupérer les rendez-vous pour ce médecin. Veuillez réessayer."
+      "Unable to retrieve appointments for this doctor. Please try again."
     )
   }
 }
 
 /**
- * Récupère tous les rendez-vous pour une spécialité donnée
- * @param specialty - La spécialité médicale
- * @returns Une liste des rendez-vous pour la spécialité spécifiée
+ * Retrieves all appointments for a given specialty
+ * @param specialty - The medical specialty
+ * @returns A list of appointments for the specified specialty
  */
 export const getAppointmentsBySpecialty = async (
   specialty: string
@@ -552,19 +521,16 @@ export const getAppointmentsBySpecialty = async (
       ...doc.data(),
     })) as Appointment[]
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des rendez-vous par spécialité:",
-      error
-    )
+    console.error("Error retrieving appointments by specialty:", error)
     throw new Error(
-      "Impossible de récupérer les rendez-vous pour cette spécialité. Veuillez réessayer."
+      "Unable to retrieve appointments for this specialty. Please try again."
     )
   }
 }
 
 /**
- * Récupère tous les rendez-vous à venir (date >= aujourd'hui)
- * @returns Une liste des rendez-vous à venir
+ * Retrieves all upcoming appointments (date >= today)
+ * @returns A list of upcoming appointments
  */
 export const getUpcomingAppointments = async (): Promise<Appointment[]> => {
   try {
@@ -585,12 +551,9 @@ export const getUpcomingAppointments = async (): Promise<Appointment[]> => {
       ...doc.data(),
     })) as Appointment[]
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des rendez-vous à venir:",
-      error
-    )
+    console.error("Error retrieving upcoming appointments:", error)
     throw new Error(
-      "Impossible de récupérer les rendez-vous à venir. Veuillez réessayer."
+      "Unable to retrieve upcoming appointments. Please try again."
     )
   }
 }
