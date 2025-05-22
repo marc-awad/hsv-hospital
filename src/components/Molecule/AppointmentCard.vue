@@ -47,7 +47,7 @@ import StatusBadge from "../Atoms/StatusBadge.vue"
 export default {
   name: "AppointmentCard",
   components: { Button, StatusBadge },
-  
+
   props: {
     appointment: {
       type: Object,
@@ -55,20 +55,20 @@ export default {
       validator(appointment) {
         return (
           appointment &&
-          typeof appointment.id !== 'undefined' &&
-          typeof appointment.firstName === 'string' &&
-          typeof appointment.lastName === 'string' &&
-          typeof appointment.specialty === 'string' &&
-          typeof appointment.doctor === 'string' &&
-          typeof appointment.date === 'string' &&
-          typeof appointment.time === 'string' &&
-          typeof appointment.status === 'string'
+          typeof appointment.id !== "undefined" &&
+          typeof appointment.firstName === "string" &&
+          typeof appointment.lastName === "string" &&
+          typeof appointment.specialty === "string" &&
+          typeof appointment.doctor === "string" &&
+          typeof appointment.date === "string" &&
+          typeof appointment.time === "string" &&
+          typeof appointment.status === "string"
         )
-      }
-    }
+      },
+    },
   },
 
-  emits: ['modify', 'cancel'],
+  emits: ["modify", "cancel"],
 
   methods: {
     formatDate(dateString) {
@@ -83,7 +83,7 @@ export default {
 
     formatTime(timeString) {
       return timeString
-    }
-  }
+    },
+  },
 }
 </script>
