@@ -307,7 +307,15 @@ const submitForm = async (): Promise<void> => {
       alert("Veuillez remplir tous les champs obligatoires.")
       return
     }
+    const selectedDate = new Date(date.value)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    selectedDate.setHours(0, 0, 0, 0)
 
+    if (selectedDate < today) {
+      alert("La date du rendez-vous ne peut pas être antérieure à aujourd'hui.")
+      return
+    }
     // 1. Préparer les données du patient
     const patientData: CreatePatientData = {
       firstName: firstName.value,
