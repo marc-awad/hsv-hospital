@@ -63,7 +63,7 @@ const doctorsBySpecialty = {
     { firstName: "Rachel", lastName: "Flow" },
     { firstName: "Steve", lastName: "Kidney" },
   ],
-  general: [
+  generalmedicine: [
     { firstName: "Tina", lastName: "General" },
     { firstName: "Uma", lastName: "Care" },
   ],
