@@ -70,6 +70,12 @@ import {
   getAppointmentsByPhone,
   cancelAppointment,
 } from "../../store/appointmentService"
+import {
+  showErrorAlert,
+  showSuccessAlert,
+  showMissingFieldAlert,
+  showConfirmDialog
+} from "../../store/sweetalert"
 
 export default {
   components: { PageTitle, Button, Input, AppointmentCard },
@@ -83,7 +89,7 @@ export default {
 
     const searchAppointments = async () => {
       if (!email.value && !phone.value) {
-        alert("Please enter an email or phone number")
+        showMissingFieldAlert("Please enter an email or phone number")
         return
       }
 
@@ -98,7 +104,7 @@ export default {
         }
       } catch (error) {
         console.error("Error searching for appointments:", error)
-        alert(
+        showErrorAlert(
           "An error occurred while searching for appointments. Please try again."
         )
       } finally {
@@ -112,7 +118,7 @@ export default {
       // Vous pouvez implémenter la navigation ou afficher un modal ici
     }
 
-    const confirmCancelAppointment = (appointment) => {
+    const confirmCancelAppointment = async (appointment) => {
       const formatDate = (dateString) => {
         const options = {
           weekday: "long",
@@ -123,13 +129,14 @@ export default {
         return new Date(dateString).toLocaleDateString(undefined, options)
       }
 
-      if (
-        confirm(
-          `Are you sure you want to cancel your appointment with Dr. ${
-            appointment.doctor
-          } on ${formatDate(appointment.date)} at ${appointment.time}?`
-        )
-      ) {
+      const result = await showConfirmDialog(
+        "Cancel Appointment",
+        `Are you sure you want to cancel your appointment with Dr. ${
+          appointment.doctor
+        } on ${formatDate(appointment.date)} at ${appointment.time}?`
+      )
+
+      if (result.isConfirmed) {
         cancelAppointmentAction(appointment.id)
       }
     }
@@ -146,10 +153,10 @@ export default {
         if (index !== -1) {
           appointments.value[index].status = "cancelled"
         }
-        alert("Appointment successfully cancelled")
+        showSuccessAlert("Appointment successfully cancelled")
       } catch (error) {
         console.error("Error cancelling appointment:", error)
-        alert(
+        showErrorAlert(
           "An error occurred while cancelling the appointment. Please try again."
         )
       } finally {

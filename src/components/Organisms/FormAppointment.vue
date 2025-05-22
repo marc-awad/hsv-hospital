@@ -168,6 +168,7 @@ import { ref, computed, onMounted } from "vue"
 import { db } from "../../firebase/firebase"
 import { collection, addDoc, serverTimestamp } from "firebase/firestore"
 import { useRouter } from "vue-router"
+import { showErrorAlert } from "../../store/sweetalert"
 
 const router = useRouter()
 
@@ -249,9 +250,9 @@ const loadSpecialties = async (): Promise<void> => {
     specialtiesOptions.value = await fetchSpecialties()
   } catch (error: unknown) {
     if (error instanceof Error) {
-      alert(error.message)
+      showErrorAlert(error.message)
     } else {
-      alert(String(error))
+      showErrorAlert(String(error))
     }
   } finally {
     loadingSpecialties.value = false
@@ -311,7 +312,7 @@ const submitForm = async (): Promise<void> => {
       !date.value ||
       !time.value
     ) {
-      alert("Veuillez remplir tous les champs obligatoires.")
+      showErrorAlert("Please fill in all required fields.")
       return
     }
     const selectedDate = new Date(date.value)
@@ -320,7 +321,7 @@ const submitForm = async (): Promise<void> => {
     selectedDate.setHours(0, 0, 0, 0)
 
     if (selectedDate < today) {
-      alert("La date du rendez-vous ne peut pas être antérieure à aujourd'hui.")
+      showErrorAlert("The appointment date cannot be earlier than today.")
       return
     }
     const appointmentData = {
@@ -371,12 +372,12 @@ const submitForm = async (): Promise<void> => {
       },
     })
   } catch (error: unknown) {
-    console.error("Erreur lors de l'ajout du document: ", error)
+    console.error("Error while adding the document:", error)
 
     if (error instanceof Error) {
-      alert(error.message)
+      showErrorAlert(error.message)
     } else {
-      alert("Échec de la soumission du rendez-vous. Veuillez réessayer.")
+      showErrorAlert("Failed to submit the appointment. Please try again.")
     }
   } finally {
     isSubmitting.value = false
