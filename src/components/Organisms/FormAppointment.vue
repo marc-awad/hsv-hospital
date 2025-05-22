@@ -167,6 +167,9 @@ import PageTitle from "../Atoms/PageTitle.vue"
 import { ref, computed, onMounted } from "vue"
 import { db } from "../../firebase/firebase"
 import { collection, addDoc, serverTimestamp } from "firebase/firestore"
+import { useRouter } from "vue-router"
+
+const router = useRouter()
 
 // Import des services
 import {
@@ -291,6 +294,10 @@ const onSpecialtyChange = async (newSpecialty: string): Promise<void> => {
 
 // Fonction de soumission du formulaire
 const submitForm = async (): Promise<void> => {
+  const selectedDoctorLabel =
+    filteredDoctorsOptions.value.find((option) => option.value === doctor.value)
+      ?.label || ""
+
   try {
     isSubmitting.value = true
 
@@ -316,6 +323,18 @@ const submitForm = async (): Promise<void> => {
       alert("La date du rendez-vous ne peut pas être antérieure à aujourd'hui.")
       return
     }
+    const appointmentData = {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      email: email.value,
+      phone: phone.value,
+      specialty: specialty.value,
+      doctor: selectedDoctorLabel,
+      date: date.value,
+      time: time.value,
+      status: "pending",
+    }
+
     // 1. Préparer les données du patient
     const patientData: CreatePatientData = {
       firstName: firstName.value,
@@ -342,9 +361,15 @@ const submitForm = async (): Promise<void> => {
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     })
-
-    alert("Rendez-vous soumis avec succès!")
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    isSubmitting.value = true
     resetForm()
+    router.push({
+      path: "/success",
+      query: {
+        data: JSON.stringify(appointmentData),
+      },
+    })
   } catch (error: unknown) {
     console.error("Erreur lors de l'ajout du document: ", error)
 

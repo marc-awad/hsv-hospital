@@ -39,19 +39,14 @@
     </div>
 
     <!-- Ligne 3: Boutons alignés à gauche -->
-    <div class="flex justify-start space-x-3 mt-4">
-      <Button
-        v-if="appointment.status !== 'cancelled'"
-        variant="secondary"
-        @click="$emit('modify', appointment)"
-      >
+    <div
+      v-if="showButtons && appointment.status !== 'cancelled'"
+      class="flex justify-start space-x-3 mt-4"
+    >
+      <Button variant="secondary" @click="$emit('modify', appointment)">
         Modify Appointment
       </Button>
-      <Button
-        v-if="appointment.status !== 'cancelled'"
-        variant="danger"
-        @click="$emit('cancel', appointment)"
-      >
+      <Button variant="danger" @click="$emit('cancel', appointment)">
         Cancel Appointment
       </Button>
     </div>
@@ -73,7 +68,6 @@ export default {
       validator(appointment) {
         return (
           appointment &&
-          typeof appointment.id !== "undefined" &&
           typeof appointment.firstName === "string" &&
           typeof appointment.lastName === "string" &&
           typeof appointment.specialty === "string" &&
@@ -84,6 +78,10 @@ export default {
         )
       },
     },
+    showButtons: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   emits: ["modify", "cancel"],
@@ -93,7 +91,6 @@ export default {
       if (specialty === "generalmedicine") {
         return "General Medicine"
       }
-      // Pour les autres spécialités, mettre une majuscule à la première lettre
       return (
         specialty.charAt(0).toUpperCase() + specialty.slice(1).toLowerCase()
       )
@@ -106,12 +103,10 @@ export default {
         month: "long",
         day: "numeric",
       }
-      // Spécifier la locale anglaise 'en-US' ou 'en-GB'
       return new Date(dateString).toLocaleDateString("en-US", options)
     },
 
     formatTime(timeString) {
-      // Si vous voulez aussi formater l'heure en format anglais (12h avec AM/PM)
       const [hours, minutes] = timeString.split(":")
       const date = new Date()
       date.setHours(parseInt(hours), parseInt(minutes))
@@ -121,9 +116,6 @@ export default {
         minute: "2-digit",
         hour12: true,
       })
-
-      // Ou simplement retourner le format 24h original :
-      // return timeString
     },
   },
 }
