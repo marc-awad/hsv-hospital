@@ -366,15 +366,43 @@ const submitForm = async (): Promise<void> => {
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     })
-    await new Promise((resolve) => setTimeout(resolve, 1000))
     isSubmitting.value = true
-    resetForm()
-    router.push({
-      path: "/success",
-      query: {
-        data: JSON.stringify(appointmentData),
-      },
-    })
+
+    const isDev = import.meta.env.MODE === "development"
+
+    try {
+      if (!isDev) {
+        const response = await fetch("/api/sendMail", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to: email.value,
+            appointment: appointmentData,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error("Failed to send email")
+        }
+      } else {
+        console.log("Dev mode: email not sent")
+      }
+
+      resetForm()
+      router.push({
+        path: "/success",
+        query: {
+          data: JSON.stringify(appointmentData),
+        },
+      })
+    } catch (error) {
+      console.error(error)
+      alert("Erreur lors de l'envoi de l'email.")
+    } finally {
+      isSubmitting.value = false
+    }
   } catch (error: unknown) {
     console.error("Error while adding the document:", error)
 
