@@ -4,13 +4,11 @@ import FooterCopyright from "./components/Organisms/FooterCopyright.vue"
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col min-h-screen">
     <NavBar />
-    <main>
+    <main class="flex-grow">
       <router-view />
     </main>
     <FooterCopyright />
   </div>
 </template>
-
-<style scoped></style>
