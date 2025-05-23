@@ -1,37 +1,38 @@
-// api/email.js
-import SibApiV3Sdk from "sib-api-v3-sdk";
+import SibApiV3Sdk from "sib-api-v3-sdk"
 
-const defaultClient = SibApiV3Sdk.ApiClient.instance;
-defaultClient.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
-
-const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi()
+SibApiV3Sdk.ApiClient.instance.authentications["api-key"].apiKey =
+  process.env.SENDINBLUE_API_KEY
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed, use POST" });
+    return res.status(405).json({ error: "Method not allowed, use POST" })
   }
 
-  const { to, appointment } = req.body;
-
+  const { to, appointment } = req.body
   if (!to || !appointment) {
-    return res.status(400).json({ error: "Missing to or appointment in body" });
+    return res
+      .status(400)
+      .json({ error: "Missing 'to' or 'appointment' in body" })
   }
 
-  const { firstName, lastName, specialty, doctor, date, time } = appointment;
+  const { firstName, lastName, specialty, doctor, date, time } = appointment
+  if (!firstName || !lastName || !specialty || !doctor || !date || !time) {
+    return res.status(400).json({ error: "Incomplete appointment details" })
+  }
 
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
-  });
+  })
 
   const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail({
-    sender: { email: "mail.hsv.hospital@gmail.com", name: "HSV Hospital" }, // ton email validé
+    sender: { email: "mail.hsv.hospital@gmail.com", name: "HSV Hospital" },
     to: [{ email: to }],
     subject: `Your appointment confirmation for ${formattedDate} at ${time} - HSV Hospital`,
-    htmlContent: `
-      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);">
+    htmlContent: `<div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);">
       <!-- Header -->
       <div style="background: linear-gradient(135deg, #2563eb 0%, #9333ea 100%); padding: 48px 32px; text-align: center;">
           <div style="background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border-radius: 50%; width: 64px; height: 64px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
@@ -93,15 +94,19 @@ export default async function handler(req, res) {
               <p style="font-size: 14px; color: #6b7280; margin: 0;">Visit our website to track your appointments or book new ones.</p>
           </div>
       </div>
-    </div>
-    `,
-  });
+    </div>`,
+  })
 
   try {
-    await apiInstance.sendTransacEmail(sendSmtpEmail);
-    return res.status(200).json({ message: "Email sent successfully" });
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail)
+    return res
+      .status(200)
+      .json({ message: "Email sent successfully", data: response })
   } catch (error) {
-    console.error("Failed to send confirmation email:", error);
-    return res.status(500).json({ error: "Failed to send email" });
+    console.error(
+      "Failed to send confirmation email:",
+      error.response?.body || error
+    )
+    return res.status(500).json({ error: "Failed to send email" })
   }
 }
