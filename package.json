@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.7",
+    "@types/node": "^22.15.21",
     "@types/vue-router": "^2.0.0",
     "@vercel/node": "^5.1.16",
     "@vitejs/plugin-vue": "^5.2.3",
