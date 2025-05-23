@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     const [hours, minutes] = timeString.split(":")
     const date = new Date()
     date.setHours(parseInt(hours), parseInt(minutes))
-    
+
     return date.toLocaleTimeString("fr-FR", {
       hour: "2-digit",
       minute: "2-digit",
@@ -81,23 +81,6 @@ export default async function handler(req, res) {
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-          }
-          .header {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            color: white;
-            padding: 32px 24px;
-            text-align: center;
-          }
-          .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-          }
-          .header p {
-            margin: 8px 0 0 0;
-            opacity: 0.9;
-            font-size: 16px;
           }
           .content {
             padding: 32px 24px;
@@ -190,20 +173,11 @@ export default async function handler(req, res) {
             .content {
               padding: 24px 16px;
             }
-            .header {
-              padding: 24px 16px;
-            }
           }
         </style>
       </head>
       <body>
         <div class="container">
-          <!-- Header -->
-          <div class="header">
-            <h1>✅ Rendez-vous Confirmé</h1>
-            <p>Votre consultation est programmée</p>
-          </div>
-
           <!-- Content -->
           <div class="content">
             <div class="greeting">
@@ -290,7 +264,9 @@ export default async function handler(req, res) {
           name: `${firstName} ${lastName}`,
         },
       ],
-      subject: `✅ Rendez-vous confirmé - ${formatDate(date)} à ${formatTime(time)}`,
+      subject: `✅ Rendez-vous confirmé - ${formatDate(date)} à ${formatTime(
+        time
+      )}`,
       htmlContent: htmlContent,
     }
 
