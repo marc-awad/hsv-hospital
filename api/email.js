@@ -29,134 +29,134 @@ export default async function handler(req, res) {
       to,
       subject: `Your appointment confirmation for ${formattedDate} at ${time} - HSV Hospital`,
       html: `
-   <div class="max-w-2xl mx-auto bg-white shadow-lg">
+ <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);">
         
         <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-12 text-center">
-            <div class="bg-white/20 backdrop-blur-sm rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-content-center">
-                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+        <div style="background: linear-gradient(135deg, #2563eb 0%, #9333ea 100%); padding: 48px 32px; text-align: center;">
+            <div style="background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border-radius: 50%; width: 64px; height: 64px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
+                <svg style="width: 32px; height: 32px; color: white;" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                 </svg>
             </div>
-            <h1 class="text-2xl font-bold text-white mb-2">Appointment Confirmed</h1>
-            <p class="text-blue-100">HSV Hospital</p>
+            <h1 style="color: #ffffff; margin: 0 0 8px; font-size: 24px; font-weight: 700;">Appointment Confirmed</h1>
+            <p style="color: rgba(219, 234, 254, 0.9); margin: 0; font-size: 16px;">HSV Hospital</p>
         </div>
 
         <!-- Content -->
-        <div class="px-8 py-8">
+        <div style="padding: 32px;">
             
             <!-- Success Message -->
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center bg-green-50 border border-green-200 rounded-lg px-4 py-3">
-                    <div class="text-green-600 text-xl mr-3">✓</div>
-                    <span class="text-green-800 font-semibold">Your appointment is confirmed!</span>
+            <div style="text-align: center; margin-bottom: 32px;">
+                <div style="display: inline-flex; align-items: center; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 16px; vertical-align: middle;">
+                    <div style="color: #059669; font-size: 20px; margin-right: 12px; font-weight: bold;">✓</div>
+                    <span style="color: #065f46; font-weight: 600;">Your appointment is confirmed!</span>
                 </div>
             </div>
 
             <!-- Greeting -->
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-2">Hello <strong>${firstName} ${lastName}</strong>,</h2>
-                <p class="text-gray-600">Thank you for choosing HSV Hospital. Here are your appointment details:</p>
+            <div style="margin-bottom: 24px;">
+                <h2 style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 0 0 8px;">Hello <strong>${firstName} ${lastName}</strong>,</h2>
+                <p style="color: #6b7280; margin: 0; line-height: 1.6;">Thank you for choosing HSV Hospital. Here are your appointment details:</p>
             </div>
 
             <!-- Appointment Details -->
-            <div class="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden mb-8">
-                <div class="bg-blue-600 px-6 py-4">
-                    <h3 class="text-white font-semibold text-center">Appointment Details</h3>
+            <div style="background-color: #f9fafb; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 32px;">
+                <div style="background-color: #2563eb; padding: 16px; text-align: center;">
+                    <h3 style="color: #ffffff; margin: 0; font-weight: 600;">Appointment Details</h3>
                 </div>
                 
-                <div class="divide-y divide-gray-200">
-                    <div class="flex items-center px-6 py-4">
-                        <div class="bg-purple-100 rounded-lg p-3 mr-4">
-                            <span class="text-lg">🏥</span>
+                <div>
+                    <div style="display: flex; align-items: center; padding: 16px; border-bottom: 1px solid #e5e7eb;">
+                        <div style="background-color: #e0e7ff; border-radius: 8px; padding: 12px; margin-right: 16px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 18px;">🏥</span>
                         </div>
                         <div>
-                            <div class="text-sm font-medium text-gray-500 uppercase tracking-wide">Specialty</div>
-                            <div class="text-gray-900 font-medium">${specialty}</div>
+                            <div style="font-size: 12px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Specialty</div>
+                            <div style="color: #111827; font-weight: 500; font-size: 16px;">${specialty}</div>
                         </div>
                     </div>
                     
-                    <div class="flex items-center px-6 py-4">
-                        <div class="bg-yellow-100 rounded-lg p-3 mr-4">
-                            <span class="text-lg">👨‍⚕️</span>
+                    <div style="display: flex; align-items: center; padding: 16px; border-bottom: 1px solid #e5e7eb;">
+                        <div style="background-color: #fef3c7; border-radius: 8px; padding: 12px; margin-right: 16px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 18px;">👨‍⚕️</span>
                         </div>
                         <div>
-                            <div class="text-sm font-medium text-gray-500 uppercase tracking-wide">Doctor</div>
-                            <div class="text-gray-900 font-medium">${doctor}</div>
+                            <div style="font-size: 12px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Doctor</div>
+                            <div style="color: #111827; font-weight: 500; font-size: 16px;">${doctor}</div>
                         </div>
                     </div>
                     
-                    <div class="flex items-center px-6 py-4">
-                        <div class="bg-blue-100 rounded-lg p-3 mr-4">
-                            <span class="text-lg">📅</span>
+                    <div style="display: flex; align-items: center; padding: 16px; border-bottom: 1px solid #e5e7eb;">
+                        <div style="background-color: #dbeafe; border-radius: 8px; padding: 12px; margin-right: 16px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 18px;">📅</span>
                         </div>
                         <div>
-                            <div class="text-sm font-medium text-gray-500 uppercase tracking-wide">Date</div>
-                            <div class="text-gray-900 font-medium">${formattedDate}</div>
+                            <div style="font-size: 12px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Date</div>
+                            <div style="color: #111827; font-weight: 500; font-size: 16px;">${formattedDate}</div>
                         </div>
                     </div>
                     
-                    <div class="flex items-center px-6 py-4">
-                        <div class="bg-red-100 rounded-lg p-3 mr-4">
-                            <span class="text-lg">⏰</span>
+                    <div style="display: flex; align-items: center; padding: 16px;">
+                        <div style="background-color: #fecaca; border-radius: 8px; padding: 12px; margin-right: 16px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 18px;">⏰</span>
                         </div>
                         <div>
-                            <div class="text-sm font-medium text-gray-500 uppercase tracking-wide">Time</div>
-                            <div class="text-gray-900 font-medium">${time}</div>
+                            <div style="font-size: 12px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Time</div>
+                            <div style="color: #111827; font-weight: 500; font-size: 16px;">${time}</div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Important Notice -->
-            <div class="bg-amber-50 border-l-4 border-amber-400 p-4 mb-8">
-                <div class="flex items-start">
-                    <span class="text-lg mr-3 mt-1">💡</span>
+            <div style="background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 16px; margin-bottom: 32px; border-radius: 0 8px 8px 0;">
+                <div style="display: flex; align-items: flex-start;">
+                    <span style="font-size: 18px; margin-right: 12px; margin-top: 2px;">💡</span>
                     <div>
-                        <h4 class="text-amber-800 font-semibold mb-1">Important</h4>
-                        <p class="text-amber-700 text-sm">Please arrive 15 minutes early with your ID and insurance card.</p>
+                        <h4 style="color: #92400e; margin: 0 0 4px; font-weight: 600; font-size: 16px;">Important</h4>
+                        <p style="color: #78350f; margin: 0; font-size: 14px; line-height: 1.5;">Please arrive 15 minutes early with your ID and insurance card.</p>
                     </div>
                 </div>
             </div>
 
             <!-- Action Buttons -->
-            <div class="text-center space-y-4 mb-8">
-                <a href="#" class="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
-                    Visit Patient Portal
-                </a>
-                <div class="space-x-4">
-                    <a href="#" class="inline-block border-2 border-blue-600 text-blue-600 font-medium px-6 py-2 rounded-full hover:bg-blue-50 transition-colors">
-                        Contact Us
+            <div style="text-align: center; margin-bottom: 32px;">
+                <div style="margin-bottom: 16px;">
+                    <a href="#" style="display: inline-block; background: linear-gradient(135deg, #2563eb 0%, #9333ea 100%); color: #ffffff; text-decoration: none; font-weight: 600; padding: 16px 32px; border-radius: 25px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); transition: all 0.3s ease;">
+                        Visit HSV Website
                     </a>
-                    <a href="#" class="inline-block border-2 border-red-600 text-red-600 font-medium px-6 py-2 rounded-full hover:bg-red-50 transition-colors">
-                        Reschedule
+                </div>
+                <div>
+                    <a href="#" style="display: inline-block; background-color: transparent; color: #2563eb; text-decoration: none; font-weight: 500; padding: 12px 24px; border: 2px solid #2563eb; border-radius: 20px; margin: 0 8px; transition: all 0.3s ease;">
+                        Track Appointments
+                    </a>
+                    <a href="#" style="display: inline-block; background-color: transparent; color: #059669; text-decoration: none; font-weight: 500; padding: 12px 24px; border: 2px solid #059669; border-radius: 20px; margin: 0 8px; transition: all 0.3s ease;">
+                        Book New Appointment
                     </a>
                 </div>
             </div>
 
-            <!-- Contact Info -->
-            <div class="text-center bg-gray-50 rounded-lg p-6">
-                <p class="text-gray-600 mb-2">Need help? We're here for you.</p>
-                <p class="text-sm text-gray-500">
-                    <strong>Phone:</strong> <a href="tel:+1234567890" class="text-blue-600 hover:underline">(123) 456-7890</a> | 
-                    <strong>Email:</strong> <a href="mailto:contact@hsvhospital.com" class="text-blue-600 hover:underline">contact@hsvhospital.com</a>
+            <!-- Website Info -->
+            <div style="text-align: center; background-color: #f9fafb; border-radius: 8px; padding: 24px;">
+                <p style="color: #6b7280; margin: 0 0 8px; font-size: 16px;">Need to manage your appointments?</p>
+                <p style="font-size: 14px; color: #6b7280; margin: 0;">
+                    Visit our website to track your appointments or book new ones.
                 </p>
             </div>
         </div>
 
         <!-- Footer -->
-        <div class="bg-gray-800 px-8 py-6 text-center">
-            <h3 class="text-white font-semibold mb-2">HSV Hospital</h3>
-            <p class="text-gray-400 text-sm mb-4">
-                123 Medical Center Drive, New York, NY 10001<br>
-                Phone: (123) 456-7890 | Email: contact@hsvhospital.com
+        <div style="background-color: #1f2937; padding: 32px; text-align: center;">
+            <h3 style="color: #ffffff; margin: 0 0 8px; font-weight: 600; font-size: 18px;">HSV Hospital</h3>
+            <p style="color: #9ca3af; margin: 0 0 16px; font-size: 14px; line-height: 1.6;">
+                Visit our website to track your appointments or book new ones.
             </p>
             
-            <hr class="border-gray-600 my-4">
+            <hr style="border: none; border-top: 1px solid #374151; margin: 16px 0;">
             
-            <p class="text-gray-500 text-xs">
+            <p style="color: #6b7280; margin: 0; font-size: 12px; line-height: 1.5;">
                 This is an automated email, please do not reply.<br>
-                <a href="#" class="text-gray-400 hover:text-gray-300 underline">Click here to unsubscribe</a>
+                <a href="#" style="color: #9ca3af; text-decoration: underline;">Click here to unsubscribe</a>
             </p>
         </div>
     </div>
