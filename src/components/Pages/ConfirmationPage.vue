@@ -30,7 +30,8 @@
 
     <SecondaryText :shade="400" :sizeRem="1.15" :maxWidthPx="600">
       Your appointment request has been successfully registered. Please keep
-      this information for your records.
+      this information for your records. A confirmation email with all the
+      details has also been sent to your inbox.
     </SecondaryText>
 
     <AppointmentCard :appointment="appointmentData" :showButtons="false" />

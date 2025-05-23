@@ -90,11 +90,6 @@ export default async function handler(req, res) {
 
             <!-- Action Buttons -->
             <div style="text-align: center; margin-bottom: 32px;">
-              <div style="margin-bottom: 16px;">
-                  <a href="https://hsv-hospital.vercel.app/" style="display: inline-block; background-color: #2563eb; color: #ffffff; text-decoration: none; font-weight: 600; padding: 14px 28px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); transition: background-color 0.3s ease;">
-                      Visit HSV Website
-                  </a>
-              </div>
                 <div>
                     <a href="https://hsv-hospital.vercel.app/tracking" style="display: inline-block; background-color: transparent; color: #2563eb; text-decoration: none; font-weight: 500; padding: 12px 24px; border: 2px solid #2563eb; border-radius: 20px; margin: 0 8px; transition: all 0.3s ease;">
                         Track Appointments
