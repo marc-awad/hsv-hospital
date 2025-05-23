@@ -2,36 +2,34 @@ import SibApiV3Sdk from "sib-api-v3-sdk"
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res
-      .status(405)
-      .json({ error: "Méthode non autorisée, utilisez POST" })
+    return res.status(405).json({ error: "Method not allowed, use POST" })
   }
 
-  // Vérifier que la clé API existe
+  // Check if API key exists
   if (!process.env.SENDINBLUE_API_KEY) {
-    return res.status(500).json({ error: "Clé API non configurée" })
+    return res.status(500).json({ error: "API key not configured" })
   }
 
   const { to, appointment } = req.body
   if (!to || !appointment) {
-    return res.status(400).json({ error: "Données manquantes" })
+    return res.status(400).json({ error: "Missing data" })
   }
 
   const { firstName, lastName, specialty, doctor, date, time } = appointment
   if (!firstName || !lastName || !specialty || !doctor || !date || !time) {
-    return res.status(400).json({ error: "Détails du rendez-vous incomplets" })
+    return res.status(400).json({ error: "Incomplete appointment details" })
   }
 
-  // Fonctions utilitaires pour le formatage
+  // Utility functions for formatting
   const formatSpecialty = (specialty) => {
     if (specialty === "generalmedicine") {
-      return "Médecine Générale"
+      return "General Medicine"
     }
     return specialty.charAt(0).toUpperCase() + specialty.slice(1).toLowerCase()
   }
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("fr-FR", {
+    return new Date(dateString).toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
       month: "long",
@@ -44,27 +42,28 @@ export default async function handler(req, res) {
     const date = new Date()
     date.setHours(parseInt(hours), parseInt(minutes))
 
-    return date.toLocaleTimeString("fr-FR", {
-      hour: "2-digit",
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
       minute: "2-digit",
+      hour12: true,
     })
   }
 
   try {
-    // Configuration de l'API
+    // API configuration
     SibApiV3Sdk.ApiClient.instance.authentications["api-key"].apiKey =
       process.env.SENDINBLUE_API_KEY
 
     const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi()
 
-    // Template HTML moderne et professionnel
+    // Modern and professional HTML template
     const htmlContent = `
       <!DOCTYPE html>
-      <html lang="fr">
+      <html lang="en">
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Confirmation de Rendez-vous</title>
+        <title>Appointment Confirmation</title>
         <style>
           body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -181,10 +180,10 @@ export default async function handler(req, res) {
           <!-- Content -->
           <div class="content">
             <div class="greeting">
-              Bonjour ${firstName} ${lastName},
+              Hello ${firstName} ${lastName},
             </div>
 
-            <p>Nous avons le plaisir de confirmer votre rendez-vous médical. Voici tous les détails :</p>
+            <p>We are pleased to confirm your medical appointment. Here are all the details:</p>
 
             <!-- Appointment Card -->
             <div class="card">
@@ -194,11 +193,11 @@ export default async function handler(req, res) {
                   <div class="info-value">${firstName} ${lastName}</div>
                 </div>
                 <div class="info-item">
-                  <div class="info-label">Spécialité</div>
+                  <div class="info-label">Specialty</div>
                   <div class="info-value">${formatSpecialty(specialty)}</div>
                 </div>
                 <div class="info-item">
-                  <div class="info-label">Médecin</div>
+                  <div class="info-label">Doctor</div>
                   <div class="info-value">Dr. ${doctor}</div>
                 </div>
               </div>
@@ -209,13 +208,13 @@ export default async function handler(req, res) {
                   <div class="info-value">${formatDate(date)}</div>
                 </div>
                 <div class="info-item">
-                  <div class="info-label">Heure</div>
+                  <div class="info-label">Time</div>
                   <div class="info-value">${formatTime(time)}</div>
                 </div>
                 <div class="info-item">
-                  <div class="info-label">Statut</div>
+                  <div class="info-label">Status</div>
                   <div class="info-value">
-                    <span class="status-badge">Confirmé</span>
+                    <span class="status-badge">Confirmed</span>
                   </div>
                 </div>
               </div>
@@ -223,29 +222,29 @@ export default async function handler(req, res) {
 
             <!-- Instructions -->
             <div class="instructions">
-              <h3>📋 Instructions importantes</h3>
+              <h3>📋 Important Instructions</h3>
               <p>
-                • Présentez-vous 15 minutes avant votre rendez-vous<br>
-                • N'oubliez pas votre carte d'identité et carte vitale<br>
-                • Apportez vos ordonnances et examens récents si nécessaire
+                • Please arrive 15 minutes before your appointment<br>
+                • Don't forget your ID and insurance card<br>
+                • Bring your prescriptions and recent medical tests if necessary
               </p>
             </div>
 
             <p>
-              Si vous avez besoin de modifier ou d'annuler ce rendez-vous, 
-              veuillez nous contacter au plus tôt.
+              If you need to modify or cancel this appointment, 
+              please contact us as soon as possible.
             </p>
 
             <p style="margin-top: 32px;">
-              Nous vous remercions de votre confiance et vous souhaitons une excellente journée.
+              Thank you for your trust and we wish you an excellent day.
             </p>
           </div>
 
           <!-- Footer -->
           <div class="footer">
             <p>
-              <span class="hospital-name">Hôpital HSV</span><br>
-              Votre santé, notre priorité
+              <span class="hospital-name">HSV Hospital</span><br>
+              Your health, our priority
             </p>
           </div>
         </div>
@@ -255,7 +254,7 @@ export default async function handler(req, res) {
 
     const emailData = {
       sender: {
-        name: "Hôpital HSV",
+        name: "HSV Hospital",
         email: "mail.hsv.hospital@gmail.com",
       },
       to: [
@@ -264,30 +263,30 @@ export default async function handler(req, res) {
           name: `${firstName} ${lastName}`,
         },
       ],
-      subject: `✅ Rendez-vous confirmé - ${formatDate(date)} à ${formatTime(
+      subject: `✅ Appointment confirmed - ${formatDate(date)} at ${formatTime(
         time
       )}`,
       htmlContent: htmlContent,
     }
 
-    console.log("📧 Envoi de l'email de confirmation...")
+    console.log("📧 Sending confirmation email...")
 
     const response = await apiInstance.sendTransacEmail(emailData)
 
-    console.log("✅ Email envoyé avec succès!")
+    console.log("✅ Email sent successfully!")
     return res.status(200).json({
-      message: "Email de confirmation envoyé avec succès",
+      message: "Confirmation email sent successfully",
       messageId: response.messageId,
     })
   } catch (error) {
-    console.error("❌ Erreur lors de l'envoi de l'email:", {
+    console.error("❌ Error sending email:", {
       message: error.message,
       response: error.response?.body,
       status: error.response?.status,
     })
 
     return res.status(500).json({
-      error: "Échec de l'envoi de l'email de confirmation",
+      error: "Failed to send confirmation email",
       details: error.response?.body || error.message,
     })
   }
