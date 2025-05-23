@@ -60,52 +60,21 @@ export default async function handler(req, res) {
             </div>
 
             <!-- Appointment Details -->
-            <div style="background-color: #f9fafb; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 32px;">
-                <div style="background-color: #2563eb; padding: 16px; text-align: center;">
-                    <h3 style="color: #ffffff; margin: 0; font-weight: 600;">Appointment Details</h3>
-                </div>
-                
-                <div>
-                    <div style="display: flex; align-items: center; padding: 16px; border-bottom: 1px solid #e5e7eb;">
-                        <div style="background-color: #e0e7ff; border-radius: 8px; padding: 12px; margin-right: 16px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
-                            <span style="font-size: 18px;">🏥</span>
-                        </div>
-                        <div>
-                            <div style="font-size: 12px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Specialty</div>
-                            <div style="color: #111827; font-weight: 500; font-size: 16px;">${specialty}</div>
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; padding: 16px; border-bottom: 1px solid #e5e7eb;">
-                        <div style="background-color: #fef3c7; border-radius: 8px; padding: 12px; margin-right: 16px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
-                            <span style="font-size: 18px;">👨‍⚕️</span>
-                        </div>
-                        <div>
-                            <div style="font-size: 12px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Doctor</div>
-                            <div style="color: #111827; font-weight: 500; font-size: 16px;">${doctor}</div>
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; padding: 16px; border-bottom: 1px solid #e5e7eb;">
-                        <div style="background-color: #dbeafe; border-radius: 8px; padding: 12px; margin-right: 16px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
-                            <span style="font-size: 18px;">📅</span>
-                        </div>
-                        <div>
-                            <div style="font-size: 12px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Date</div>
-                            <div style="color: #111827; font-weight: 500; font-size: 16px;">${formattedDate}</div>
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; padding: 16px;">
-                        <div style="background-color: #fecaca; border-radius: 8px; padding: 12px; margin-right: 16px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
-                            <span style="font-size: 18px;">⏰</span>
-                        </div>
-                        <div>
-                            <div style="font-size: 12px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Time</div>
-                            <div style="color: #111827; font-weight: 500; font-size: 16px;">${time}</div>
-                        </div>
-                    </div>
-                </div>
+            <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 32px; font-family: Arial, sans-serif;">
+                <h3 style="margin: 0 0 16px; color: #2563eb; font-size: 18px; text-align: center;">Appointment Details</h3>
+
+                <p style="margin: 8px 0; color: #111827;">
+                    <strong>Specialty:</strong> ${specialty}
+                </p>
+                <p style="margin: 8px 0; color: #111827;">
+                    <strong>Doctor:</strong> ${doctor}
+                </p>
+                <p style="margin: 8px 0; color: #111827;">
+                    <strong>Date:</strong> ${formattedDate}
+                </p>
+                <p style="margin: 8px 0; color: #111827;">
+                    <strong>Time:</strong> ${time}
+                </p>
             </div>
 
             <!-- Important Notice -->
@@ -121,16 +90,16 @@ export default async function handler(req, res) {
 
             <!-- Action Buttons -->
             <div style="text-align: center; margin-bottom: 32px;">
-                <div style="margin-bottom: 16px;">
-                    <a href="#" style="display: inline-block; background: linear-gradient(135deg, #2563eb 0%, #9333ea 100%); color: #ffffff; text-decoration: none; font-weight: 600; padding: 16px 32px; border-radius: 25px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); transition: all 0.3s ease;">
-                        Visit HSV Website
-                    </a>
-                </div>
+              <div style="margin-bottom: 16px;">
+                  <a href="https://hsv-hospital.vercel.app/" style="display: inline-block; background-color: #2563eb; color: #ffffff; text-decoration: none; font-weight: 600; padding: 14px 28px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); transition: background-color 0.3s ease;">
+                      Visit HSV Website
+                  </a>
+              </div>
                 <div>
-                    <a href="#" style="display: inline-block; background-color: transparent; color: #2563eb; text-decoration: none; font-weight: 500; padding: 12px 24px; border: 2px solid #2563eb; border-radius: 20px; margin: 0 8px; transition: all 0.3s ease;">
+                    <a href="https://hsv-hospital.vercel.app/tracking" style="display: inline-block; background-color: transparent; color: #2563eb; text-decoration: none; font-weight: 500; padding: 12px 24px; border: 2px solid #2563eb; border-radius: 20px; margin: 0 8px; transition: all 0.3s ease;">
                         Track Appointments
                     </a>
-                    <a href="#" style="display: inline-block; background-color: transparent; color: #059669; text-decoration: none; font-weight: 500; padding: 12px 24px; border: 2px solid #059669; border-radius: 20px; margin: 0 8px; transition: all 0.3s ease;">
+                    <a href="https://hsv-hospital.vercel.app/booking" style="display: inline-block; background-color: transparent; color: #059669; text-decoration: none; font-weight: 500; padding: 12px 24px; border: 2px solid #059669; border-radius: 20px; margin: 0 8px; transition: all 0.3s ease;">
                         Book New Appointment
                     </a>
                 </div>
@@ -143,21 +112,6 @@ export default async function handler(req, res) {
                     Visit our website to track your appointments or book new ones.
                 </p>
             </div>
-        </div>
-
-        <!-- Footer -->
-        <div style="background-color: #1f2937; padding: 32px; text-align: center;">
-            <h3 style="color: #ffffff; margin: 0 0 8px; font-weight: 600; font-size: 18px;">HSV Hospital</h3>
-            <p style="color: #9ca3af; margin: 0 0 16px; font-size: 14px; line-height: 1.6;">
-                Visit our website to track your appointments or book new ones.
-            </p>
-            
-            <hr style="border: none; border-top: 1px solid #374151; margin: 16px 0;">
-            
-            <p style="color: #6b7280; margin: 0; font-size: 12px; line-height: 1.5;">
-                This is an automated email, please do not reply.<br>
-                <a href="#" style="color: #9ca3af; text-decoration: underline;">Click here to unsubscribe</a>
-            </p>
         </div>
     </div>
 `,
