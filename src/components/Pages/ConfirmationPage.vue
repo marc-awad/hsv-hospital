@@ -104,7 +104,7 @@ onMounted(() => {
     try {
       const data = JSON.parse(route.query.data)
       appointmentData.value = data
-      console.log("appointmentData after parsing:", appointmentData.value)
+      // console.log("appointmentData after parsing:", appointmentData.value)
     } catch (e) {
       console.error("Failed to parse appointmentData from query:", e)
       appointmentData.value = null
