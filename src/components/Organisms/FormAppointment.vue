@@ -372,7 +372,7 @@ const submitForm = async (): Promise<void> => {
 
     try {
       if (!isDev) {
-        const response = await fetch("/api/sendMail", {
+        const response = await fetch("/api/email", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

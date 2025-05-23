@@ -75,7 +75,7 @@ import {
   showSuccessAlert,
   showMissingFieldAlert,
   showConfirmDialog,
-  showModifyAppointmentModalSimple
+  showModifyAppointmentModalSimple,
 } from "../../store/sweetalert"
 
 export default {
@@ -115,7 +115,7 @@ export default {
 
     const modifyAppointmentTime = (appointment) => {
       showModifyAppointmentModalSimple(appointment)
-      console.log("Modify appointment:", appointment)
+      // console.log("Modify appointment:", appointment)
     }
 
     const confirmCancelAppointment = async (appointment) => {
@@ -155,7 +155,7 @@ export default {
         }
         showSuccessAlert("Appointment successfully cancelled")
       } catch (error) {
-        console.error("Error cancelling appointment:", error)
+        // console.error("Error cancelling appointment:", error)
         showErrorAlert(
           "An error occurred while cancelling the appointment. Please try again."
         )
