@@ -1,7 +1,5 @@
 import { Resend } from "resend"
 import type { VercelRequest, VercelResponse } from "@vercel/node"
-import dotenv from "dotenv"
-dotenv.config()
 
 const resend = new Resend(process.env.RESEND_API_KEY || "")
 
