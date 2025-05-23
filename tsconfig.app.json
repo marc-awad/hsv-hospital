@@ -17,6 +17,6 @@
     "src/**/*.vue",
     "src/**/*.d.ts",
     "src/firebase/seedSpecialtiesAndDoctors.js",
-    "api/email.cjs"
+    "api/email.js"
   ]
 }
