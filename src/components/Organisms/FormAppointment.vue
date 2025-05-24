@@ -127,7 +127,7 @@
                 {{ selectedDoctor?.name }}
               </h3>
               <p class="text-sm text-gray-600">
-                {{ selectedDoctor?.specialty }}
+                {{ formatSpecialty(selectedDoctor?.specialty) }}
               </p>
             </div>
           </div>
@@ -354,6 +354,15 @@ const isSlotBooked = (start: string, end: string): boolean =>
       (checkStart <= slotStart && checkEnd >= slotEnd)
     )
   })
+
+function formatSpecialty(specialty?: string): string {
+  if (!specialty) return ""
+  const spec = specialty.toLowerCase()
+  if (spec === "generalmedicine") {
+    return "General Medicine"
+  }
+  return specialty.charAt(0).toUpperCase() + specialty.slice(1).toLowerCase()
+}
 
 // Calendar events
 const calendarEvents = computed(() => {

@@ -43,9 +43,6 @@
       v-if="showButtons && appointment.status !== 'cancelled'"
       class="flex flex-col sm:flex-row justify-start space-y-2 sm:space-y-0 sm:space-x-3 mt-4"
     >
-      <Button variant="secondary" @click="$emit('modify', appointment)">
-        Modify Appointment Time
-      </Button>
       <Button variant="danger" @click="$emit('cancel', appointment)">
         Cancel Appointment
       </Button>
@@ -68,7 +65,7 @@ export default {
     showButtons: { type: Boolean, default: true },
   },
 
-  emits: ["modify", "cancel"],
+  emits: ["cancel"],
 
   data: () => ({ doctorInfo: null, loadingDoctor: false }),
 

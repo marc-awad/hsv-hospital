@@ -32,7 +32,12 @@
         placeholder="+33 6 12 34 56 78"
       />
       <div class="flex justify-center sm:justify-start">
-        <Button type="submit" class="mt-4 sm:mt-6 w-full sm:w-auto" :loading="loading">Search</Button>
+        <Button
+          type="submit"
+          class="mt-4 sm:mt-6 w-full sm:w-auto"
+          :loading="loading"
+          >Search</Button
+        >
       </div>
     </form>
 
@@ -53,7 +58,6 @@
           v-for="appointment in appointments"
           :key="appointment.id"
           :appointment="appointment"
-          @modify="modifyAppointmentTime"
           @cancel="confirmCancelAppointment"
         />
       </div>
@@ -115,27 +119,42 @@ export default {
       }
     }
 
-    const modifyAppointmentTime = (appointment) => {
-      showModifyAppointmentModalSimple(appointment)
-      // console.log("Modify appointment:", appointment)
+    const parseDateTime = (value) => {
+      if (!value) return null
+      if (typeof value === "string") return new Date(value)
+      if (value instanceof Date) return value
+      if (value.toDate) return value.toDate()
+      if (value.seconds) return new Date(value.seconds * 1000)
+      return null
     }
 
     const confirmCancelAppointment = async (appointment) => {
-      const formatDate = (dateString) => {
-        const options = {
+      const formatDate = (date) => {
+        if (!(date instanceof Date)) return "Invalid Date"
+        return date.toLocaleDateString("en-US", {
           weekday: "long",
           year: "numeric",
           month: "long",
           day: "numeric",
-        }
-        return new Date(dateString).toLocaleDateString(undefined, options)
+        })
       }
+
+      const formatTime = (date) => {
+        if (!(date instanceof Date)) return "Time invalid"
+        return date.toLocaleTimeString(undefined, {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        })
+      }
+
+      const appointmentDate = parseDateTime(appointment.appointmentStart)
 
       const result = await showConfirmDialog(
         "Cancel Appointment",
         `Are you sure you want to cancel your appointment with Dr. ${
-          appointment.doctor
-        } on ${formatDate(appointment.date)} at ${appointment.time}?`
+          appointment.doctorName
+        } on ${formatDate(appointmentDate)} at ${formatTime(appointmentDate)}?`
       )
 
       if (result.isConfirmed) {
@@ -173,7 +192,6 @@ export default {
       loading,
       searchPerformed,
       searchAppointments,
-      modifyAppointmentTime,
       confirmCancelAppointment,
     }
   },
