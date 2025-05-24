@@ -69,13 +69,6 @@ const doctorsBySpecialty = {
   ],
 }
 
-// Exemple simple de créneaux disponibles (dispo pour tous)
-const exampleSlots = [
-  { day: "Monday", start: "09:00", end: "12:00" },
-  { day: "Wednesday", start: "13:00", end: "16:00" },
-  { day: "Friday", start: "09:00", end: "12:00" },
-]
-
 async function seed() {
   const batch = db.batch()
 

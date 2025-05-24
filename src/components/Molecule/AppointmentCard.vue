@@ -2,47 +2,43 @@
   <div
     class="border border-gray-200 rounded-lg p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow"
   >
-    <!-- Ligne 1: Patient, Specialty, Doctor -->
+    <!-- Patient, Specialty, Doctor -->
     <div
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 sm:mb-6 text-left"
     >
       <div>
         <p class="text-xs text-gray-500 tracking-wide mb-2">Patient</p>
-        <p class="font-medium">
-          {{ appointment.firstName }} {{ appointment.lastName }}
-        </p>
+        <p class="font-medium">{{ patientName }}</p>
       </div>
       <div>
         <p class="text-xs text-gray-500 tracking-wide mb-2">Specialty</p>
-        <p class="font-medium">
-          {{ formatSpecialty(appointment.specialty) }}
-        </p>
+        <p class="font-medium">{{ specialtyDisplay }}</p>
       </div>
       <div class="sm:col-span-2 lg:col-span-1">
         <p class="text-xs text-gray-500 tracking-wide mb-2">Doctor</p>
-        <p class="font-medium">Dr. {{ appointment.doctor }}</p>
+        <p class="font-medium">{{ doctorDisplay }}</p>
       </div>
     </div>
 
-    <!-- Ligne 2: Date, Time, Status -->
+    <!-- Date, Time, Status -->
     <div
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 sm:mb-6 text-left"
     >
       <div>
         <p class="text-xs text-gray-500 tracking-wide mb-2">Date</p>
-        <p class="font-medium">{{ formatDate(appointment.date) }}</p>
+        <p class="font-medium">{{ dateDisplay }}</p>
       </div>
       <div>
         <p class="text-xs text-gray-500 tracking-wide mb-2">Time</p>
-        <p class="font-medium">{{ formatTime(appointment.time) }}</p>
+        <p class="font-medium">{{ timeDisplay }}</p>
       </div>
       <div class="sm:col-span-2 lg:col-span-1">
         <p class="text-xs text-gray-500 tracking-wide mb-2">Status</p>
-        <StatusBadge :status="appointment.status" />
+        <StatusBadge :status="appointment.status || 'pending'" />
       </div>
     </div>
 
-    <!-- Ligne 3: Boutons alignés à gauche -->
+    <!-- Buttons -->
     <div
       v-if="showButtons && appointment.status !== 'cancelled'"
       class="flex flex-col sm:flex-row justify-start space-y-2 sm:space-y-0 sm:space-x-3 mt-4"
@@ -60,66 +56,147 @@
 <script>
 import Button from "../Atoms/Button.vue"
 import StatusBadge from "../Atoms/StatusBadge.vue"
+import { doc, getDoc } from "firebase/firestore"
+import { db } from "../../firebase/firebase"
 
 export default {
   name: "AppointmentCard",
   components: { Button, StatusBadge },
 
   props: {
-    appointment: {
-      type: Object,
-      required: true,
-      validator(appointment) {
-        return (
-          appointment &&
-          typeof appointment.firstName === "string" &&
-          typeof appointment.lastName === "string" &&
-          typeof appointment.specialty === "string" &&
-          typeof appointment.doctor === "string" &&
-          typeof appointment.date === "string" &&
-          typeof appointment.time === "string" &&
-          typeof appointment.status === "string"
-        )
-      },
-    },
-    showButtons: {
-      type: Boolean,
-      default: true,
-    },
+    appointment: { type: Object, required: true },
+    showButtons: { type: Boolean, default: true },
   },
 
   emits: ["modify", "cancel"],
 
-  methods: {
-    formatSpecialty(specialty) {
-      if (specialty === "generalmedicine") {
-        return "General Medicine"
-      }
+  data: () => ({ doctorInfo: null, loadingDoctor: false }),
+
+  async mounted() {
+    await this.fetchDoctorInfo()
+  },
+
+  watch: { "appointment.doctorId": "fetchDoctorInfo" },
+
+  computed: {
+    patientName() {
+      return `${this.appointment.firstName || "Unknown"} ${
+        this.appointment.lastName || "Patient"
+      }`
+    },
+
+    specialtyDisplay() {
+      const specialty =
+        this.appointment.specialtyName ||
+        this.appointment.specialty ||
+        this.appointment.specialtyId
+      if (!specialty) return "Unknown Specialty"
+      if (specialty === "generalmedicine") return "General Medicine"
+      if (specialty.includes(" ")) return specialty
       return (
         specialty.charAt(0).toUpperCase() + specialty.slice(1).toLowerCase()
       )
     },
 
-    formatDate(dateString) {
-      const options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+    doctorDisplay() {
+      if (this.loadingDoctor) return "Loading doctor info..."
+
+      if (this.doctorInfo?.firstName || this.doctorInfo?.lastName) {
+        const name = `${this.doctorInfo.firstName || ""} ${
+          this.doctorInfo.lastName || ""
+        }`.trim()
+        return name ? `Dr. ${name}` : "Doctor information unavailable"
       }
-      return new Date(dateString).toLocaleDateString("en-US", options)
+
+      const directName =
+        this.appointment.doctorName ||
+        this.appointment.doctor ||
+        this.appointment.doctorFullName
+      if (directName?.trim()) {
+        const clean = directName.trim()
+        return clean.toLowerCase().startsWith("dr") ? clean : `Dr. ${clean}`
+      }
+
+      return this.appointment.doctorId
+        ? `Dr. (ID: ${this.appointment.doctorId})`
+        : "Doctor not assigned"
     },
 
-    formatTime(timeString) {
-      const [hours, minutes] = timeString.split(":")
-      const date = new Date()
-      date.setHours(parseInt(hours), parseInt(minutes))
+    appointmentDate() {
+      const { appointmentStart, date } = this.appointment
+      if (appointmentStart) {
+        if (typeof appointmentStart === "string")
+          return new Date(appointmentStart)
+        if (appointmentStart instanceof Date) return appointmentStart
+        if (appointmentStart.toDate) return appointmentStart.toDate()
+        if (appointmentStart.seconds)
+          return new Date(appointmentStart.seconds * 1000)
+      }
+      return date ? new Date(date) : new Date()
+    },
 
-      return date.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      })
+    dateDisplay() {
+      try {
+        return this.appointmentDate.toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      } catch {
+        return "Date not specified"
+      }
+    },
+
+    timeDisplay() {
+      try {
+        const startDate = this.appointmentDate
+        const endDate = this.appointment.appointmentEnd
+          ? this.parseDateTime(this.appointment.appointmentEnd)
+          : null
+
+        const formatTime = (date) =>
+          date.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          })
+
+        if (endDate) return `${formatTime(startDate)} - ${formatTime(endDate)}`
+        return formatTime(startDate)
+      } catch {
+        return this.appointment.time || "Time not specified"
+      }
+    },
+  },
+
+  methods: {
+    async fetchDoctorInfo() {
+      if (
+        !this.appointment.doctorId ||
+        this.doctorInfo?.id === this.appointment.doctorId
+      )
+        return
+
+      this.loadingDoctor = true
+      try {
+        const snap = await getDoc(doc(db, "doctors", this.appointment.doctorId))
+        this.doctorInfo = snap.exists() ? { id: snap.id, ...snap.data() } : null
+      } catch (error) {
+        console.error("Error fetching doctor:", error)
+        this.doctorInfo = null
+      } finally {
+        this.loadingDoctor = false
+      }
+    },
+
+    parseDateTime(value) {
+      if (!value) return null
+      if (typeof value === "string") return new Date(value)
+      if (value instanceof Date) return value
+      if (value.toDate) return value.toDate()
+      if (value.seconds) return new Date(value.seconds * 1000)
+      return null
     },
   },
 }

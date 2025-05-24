@@ -21,6 +21,9 @@ export interface Appointment {
   specialty: string
   date: string // ISO format "YYYY-MM-DD"
   doctor: string
+  doctorId?: string
+  doctorName?: string
+  doctorInfo?: any
   time: string // format "HH:mm"
   status: string // "pending", "confirmed", "cancelled", etc.
   patientId?: string // Optional, to link to an existing patient
@@ -204,11 +207,6 @@ export const deleteAppointment = async (
   }
 }
 
-/**
- * Retrieves all appointments for a patient by email
- * @param email - The patient's email
- * @returns A list of the patient's appointments
- */
 export const getAppointmentsByEmail = async (
   email: string
 ): Promise<Appointment[]> => {
@@ -218,8 +216,8 @@ export const getAppointmentsByEmail = async (
       query(
         appointmentsRef,
         where("email", "==", email),
-        orderBy("date"),
-        orderBy("time")
+        // Utiliser un seul orderBy ou créer un index composite
+        orderBy("appointmentStart") // ou orderBy("createdAt")
       )
     )
 
@@ -231,23 +229,23 @@ export const getAppointmentsByEmail = async (
         ...appointmentDoc.data(),
       } as Appointment
 
-      // Retrieve doctor information
-      if (appointmentData.doctor) {
-        // appointmentData.doctor contains the doctor's ID
+      // Retrieve doctor information - CORRIGER: utiliser doctorId au lieu de doctor
+      if (appointmentData.doctorId) {
         try {
           const doctorDoc = await getDoc(
-            doc(db, "doctors", appointmentData.doctor)
+            doc(db, "doctors", appointmentData.doctorId)
           )
           if (doctorDoc.exists()) {
             const doctorData = doctorDoc.data()
-            appointmentData.doctor = `${doctorData.firstName} ${doctorData.lastName}` // Replace with firstName + lastName
+            // Ajouter les infos du docteur sans écraser doctorId
+            appointmentData.doctorName = `${doctorData.firstName} ${doctorData.lastName}`
+            appointmentData.doctorInfo = doctorData
           }
         } catch (doctorError) {
           console.warn(
-            `Unable to retrieve doctor information ${appointmentData.doctor}:`,
+            `Unable to retrieve doctor information ${appointmentData.doctorId}:`,
             doctorError
           )
-          // Keep original ID in case of error
         }
       }
 
@@ -277,8 +275,7 @@ export const getAppointmentsByPhone = async (
       query(
         appointmentsRef,
         where("phone", "==", phone),
-        orderBy("date"),
-        orderBy("time")
+        orderBy("appointmentStart") // Utiliser le champ timestamp existant
       )
     )
 
@@ -290,23 +287,22 @@ export const getAppointmentsByPhone = async (
         ...appointmentDoc.data(),
       } as Appointment
 
-      // Retrieve doctor information
-      if (appointmentData.doctor) {
-        // appointmentData.doctor contains the doctor's ID
+      // Retrieve doctor information - CORRIGER: utiliser doctorId
+      if (appointmentData.doctorId) {
         try {
           const doctorDoc = await getDoc(
-            doc(db, "doctors", appointmentData.doctor)
+            doc(db, "doctors", appointmentData.doctorId)
           )
           if (doctorDoc.exists()) {
             const doctorData = doctorDoc.data()
-            appointmentData.doctor = `${doctorData.firstName} ${doctorData.lastName}` // Replace with firstName + lastName
+            appointmentData.doctorName = `${doctorData.firstName} ${doctorData.lastName}`
+            appointmentData.doctorInfo = doctorData
           }
         } catch (doctorError) {
           console.warn(
-            `Unable to retrieve doctor information ${appointmentData.doctor}:`,
+            `Unable to retrieve doctor information ${appointmentData.doctorId}:`,
             doctorError
           )
-          // Keep original ID in case of error
         }
       }
 
@@ -343,7 +339,6 @@ export const getAppointmentsByEmailOrPhone = async (
     throw new Error("Unable to retrieve appointments. Please try again.")
   }
 }
-
 /**
  * Retrieves all appointments for a patient by name
  * @param firstName - The patient's first name

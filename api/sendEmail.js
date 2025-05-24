@@ -14,22 +14,54 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing data" })
   }
 
-  const { firstName, lastName, specialty, doctor, date, time } = appointment
-  if (!firstName || !lastName || !specialty || !doctor || !date || !time) {
+  const {
+    firstName,
+    lastName,
+    specialtyId,
+    doctorId,
+    appointmentStart,
+    appointmentEnd,
+    status,
+  } = appointment
+
+  if (
+    !firstName ||
+    !lastName ||
+    !specialtyId ||
+    !doctorId ||
+    !appointmentStart ||
+    !appointmentEnd
+  ) {
     return res.status(400).json({ error: "Incomplete appointment details" })
   }
 
-  const formatSpecialty = (s) => s === "generalmedicine" ? "General Medicine" : s.charAt(0).toUpperCase() + s.slice(1).toLowerCase()
-  const formatDate = (d) => new Date(d).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })
-  const formatTime = (t) => {
-    const [h, m] = t.split(":")
-    const date = new Date()
-    date.setHours(parseInt(h), parseInt(m))
-    return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })
+  const formatSpecialty = (s) =>
+    s === "generalmedicine"
+      ? "General Medicine"
+      : s.charAt(0).toUpperCase() + s.slice(1).toLowerCase()
+
+  const formatDate = (timestamp) => {
+    const d = new Date(timestamp.seconds * 1000)
+    return d.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  }
+
+  const formatTime = (timestamp) => {
+    const d = new Date(timestamp.seconds * 1000)
+    return d.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
   }
 
   try {
-    SibApiV3Sdk.ApiClient.instance.authentications["api-key"].apiKey = process.env.SENDINBLUE_API_KEY
+    SibApiV3Sdk.ApiClient.instance.authentications["api-key"].apiKey =
+      process.env.SENDINBLUE_API_KEY
     const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi()
 
     const htmlContent = `
@@ -65,23 +97,23 @@ export default async function handler(req, res) {
                 </div>
                 <div class="info-item">
                   <div class="label">Specialty</div>
-                  <div class="value">${formatSpecialty(specialty)}</div>
+                  <div class="value">${formatSpecialty(specialtyId)}</div>
                 </div>
                 <div class="info-item">
                   <div class="label">Doctor</div>
-                  <div class="value">Dr. ${doctor}</div>
+                  <div class="value">Dr. ${doctorId}</div>
                 </div>
                 <div class="info-item">
                   <div class="label">Date</div>
-                  <div class="value">${formatDate(date)}</div>
+                  <div class="value">${formatDate(appointmentStart)}</div>
                 </div>
                 <div class="info-item">
                   <div class="label">Time</div>
-                  <div class="value">${formatTime(time)}</div>
+                  <div class="value">${formatTime(appointmentStart)}</div>
                 </div>
                 <div class="info-item">
                   <div class="label">Status</div>
-                  <div class="value"><span class="badge">Pending</span></div>
+                  <div class="value"><span class="badge">${status}</span></div>
                 </div>
               </div>
             </div>
@@ -108,20 +140,22 @@ export default async function handler(req, res) {
     const emailData = {
       sender: { name: "HSV Hospital", email: "mail.hsv.hospital@gmail.com" },
       to: [{ email: to, name: `${firstName} ${lastName}` }],
-      subject: `Appointment confirmed - ${formatDate(date)} at ${formatTime(time)}`,
-      htmlContent
+      subject: `Appointment confirmed - ${formatDate(
+        appointmentStart
+      )} at ${formatTime(appointmentStart)}`,
+      htmlContent,
     }
 
     const response = await apiInstance.sendTransacEmail(emailData)
-    
+
     return res.status(200).json({
       message: "Email sent successfully",
-      messageId: response.messageId
+      messageId: response.messageId,
     })
   } catch (error) {
     return res.status(500).json({
       error: "Failed to send email",
-      details: error.response?.body || error.message
+      details: error.response?.body || error.message,
     })
   }
 }
