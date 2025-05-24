@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col items-center justify-center text-center my-8 gap-y-4"
+    class="flex flex-col items-center justify-center text-center my-4 sm:my-8 gap-y-4 px-4 sm:px-6"
   >
     <PageTitle
       title="Book your appointment in just a few clicks"
@@ -11,8 +11,10 @@
       Access quality healthcare services with ease at HSV Hospital - your health
       is our priority since 2017.
     </SecondaryText>
-    <div class="my-4 flex gap-x-8 justify-center mb-20">
-      <Button to="/booking">
+    <div
+      class="my-4 flex flex-col sm:flex-row gap-4 sm:gap-x-8 justify-center mb-12 sm:mb-20 w-full sm:w-auto"
+    >
+      <Button to="/booking" class="w-full sm:w-auto">
         <template #icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +36,7 @@
         </template>
         Book an Appointment</Button
       >
-      <Button to="/tracking" variant="tertiary">
+      <Button to="/tracking" variant="tertiary" class="w-full sm:w-auto">
         <template #icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +57,7 @@
         Track Appointment
       </Button>
     </div>
-    <FeatureCardSection/>
+    <FeatureCardSection />
   </div>
 </template>
 

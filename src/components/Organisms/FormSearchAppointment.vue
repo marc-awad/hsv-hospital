@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full max-w-4xl mx-auto px-6 my-14 rounded-md py-6"
+    class="w-full max-w-4xl mx-auto px-4 sm:px-6 my-8 sm:my-14 rounded-md py-4 sm:py-6"
     style="
       box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1),
         0 -8px 15px -3px rgba(0, 0, 0, 0.1);
@@ -10,7 +10,7 @@
       title="Search for your appointment"
       :sizeRem="1.3"
       color="primary"
-      class="text-left mb-8"
+      class="text-left mb-6 sm:mb-8"
     />
     <form @submit.prevent="searchAppointments" class="text-left">
       <Input
@@ -18,7 +18,7 @@
         v-model="email"
         inputId="email"
         placeholder="your.email@example.com"
-        class="mb-6"
+        class="mb-4 sm:mb-6"
       />
       <div class="flex items-center my-4">
         <div class="flex-grow border-t border-gray-300"></div>
@@ -31,12 +31,14 @@
         inputId="phone"
         placeholder="+33 6 12 34 56 78"
       />
-      <Button type="submit" class="mt-6" :loading="loading">Search</Button>
+      <div class="flex justify-center sm:justify-start">
+        <Button type="submit" class="mt-4 sm:mt-6 w-full sm:w-auto" :loading="loading">Search</Button>
+      </div>
     </form>
 
     <!-- Affichage des résultats -->
-    <div v-if="searchPerformed" class="mt-10">
-      <h2 class="text-xl font-semibold mb-4">Search Results</h2>
+    <div v-if="searchPerformed" class="mt-8 sm:mt-10">
+      <h2 class="text-lg sm:text-xl font-semibold mb-4">Search Results</h2>
 
       <div v-if="loading" class="text-center py-8">
         <p>Searching for appointments...</p>
@@ -46,7 +48,7 @@
         <p>No appointments found for this contact information.</p>
       </div>
 
-      <div v-else class="space-y-6">
+      <div v-else class="space-y-4 sm:space-y-6">
         <AppointmentCard
           v-for="appointment in appointments"
           :key="appointment.id"

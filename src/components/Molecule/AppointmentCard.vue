@@ -1,9 +1,11 @@
 <template>
   <div
-    class="border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+    class="border border-gray-200 rounded-lg p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow"
   >
     <!-- Ligne 1: Patient, Specialty, Doctor -->
-    <div class="grid grid-cols-3 gap-4 mb-6 text-left">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 sm:mb-6 text-left"
+    >
       <div>
         <p class="text-xs text-gray-500 tracking-wide mb-2">Patient</p>
         <p class="font-medium">
@@ -16,14 +18,16 @@
           {{ formatSpecialty(appointment.specialty) }}
         </p>
       </div>
-      <div>
+      <div class="sm:col-span-2 lg:col-span-1">
         <p class="text-xs text-gray-500 tracking-wide mb-2">Doctor</p>
         <p class="font-medium">Dr. {{ appointment.doctor }}</p>
       </div>
     </div>
 
     <!-- Ligne 2: Date, Time, Status -->
-    <div class="grid grid-cols-3 gap-4 mb-6 text-left">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 sm:mb-6 text-left"
+    >
       <div>
         <p class="text-xs text-gray-500 tracking-wide mb-2">Date</p>
         <p class="font-medium">{{ formatDate(appointment.date) }}</p>
@@ -32,7 +36,7 @@
         <p class="text-xs text-gray-500 tracking-wide mb-2">Time</p>
         <p class="font-medium">{{ formatTime(appointment.time) }}</p>
       </div>
-      <div>
+      <div class="sm:col-span-2 lg:col-span-1">
         <p class="text-xs text-gray-500 tracking-wide mb-2">Status</p>
         <StatusBadge :status="appointment.status" />
       </div>
@@ -41,7 +45,7 @@
     <!-- Ligne 3: Boutons alignés à gauche -->
     <div
       v-if="showButtons && appointment.status !== 'cancelled'"
-      class="flex justify-start space-x-3 mt-4"
+      class="flex flex-col sm:flex-row justify-start space-y-2 sm:space-y-0 sm:space-x-3 mt-4"
     >
       <Button variant="secondary" @click="$emit('modify', appointment)">
         Modify Appointment Time

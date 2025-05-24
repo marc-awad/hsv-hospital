@@ -1,17 +1,17 @@
 <template>
   <div
     v-if="appointmentData"
-    class="flex flex-col items-center text-center my-8 gap-y-4"
+    class="flex flex-col items-center text-center my-4 sm:my-8 gap-y-4 px-4 sm:px-6"
   >
     <div
-      class="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mb-6"
+      class="w-16 h-16 sm:w-20 sm:h-20 bg-green-500/10 rounded-full flex items-center justify-center mb-4 sm:mb-6"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
-        class="w-10 h-10 text-[#22c55e]"
+        class="w-8 h-8 sm:w-10 sm:h-10 text-[#22c55e]"
       >
         <path
           stroke-linecap="round"
@@ -34,10 +34,12 @@
       details has also been sent to your inbox.
     </SecondaryText>
 
-    <AppointmentCard :appointment="appointmentData" :showButtons="false" />
+    <div class="w-full max-w-4xl">
+      <AppointmentCard :appointment="appointmentData" :showButtons="false" />
+    </div>
 
-    <div class="flex flex-col sm:flex-row gap-4">
-      <Button to="/" variant="secondary">
+    <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
+      <Button to="/" variant="secondary" class="w-full sm:w-auto">
         <template #default>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +60,7 @@
         </template>
       </Button>
 
-      <Button to="/tracking">
+      <Button to="/tracking" class="w-full sm:w-auto">
         <template #default>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +85,7 @@
     </div>
   </div>
 
-  <div v-else class="text-center my-8">
+  <div v-else class="text-center my-4 sm:my-8 px-4 sm:px-6">
     <p>No appointment data found.</p>
   </div>
 </template>

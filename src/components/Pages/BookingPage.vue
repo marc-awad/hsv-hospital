@@ -1,19 +1,21 @@
 <template>
-  <div class="flex flex-col items-center text-center my-8 gap-y-4">
-    <PageTitle title="Book Your Appointment" :sizeRem="2.5" color="primary" />
-    <SecondaryText :shade="500" :sizeRem="1.2" :maxWidthPx="600">
-      Fill out the form below to schedule a consultation with one of our
-      specialists.
-    </SecondaryText>
-  </div>
-  <div
-    class="w-full max-w-4xl mx-auto px-6 my-14 rounded-md py-6"
-    style="
-      box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1),
-        0 -8px 15px -3px rgba(0, 0, 0, 0.1);
-    "
-  >
-    <FormAppointment @appointment-submitted="handleAppointmentSubmission" />
+  <div class="px-4 sm:px-6">
+    <div class="flex flex-col items-center text-center my-4 sm:my-8 gap-y-4">
+      <PageTitle title="Book Your Appointment" :sizeRem="2.5" color="primary" />
+      <SecondaryText :shade="500" :sizeRem="1.2" :maxWidthPx="600">
+        Fill out the form below to schedule a consultation with one of our
+        specialists.
+      </SecondaryText>
+    </div>
+    <div
+      class="w-full max-w-4xl mx-auto px-4 sm:px-6 my-8 sm:my-14 rounded-md py-4 sm:py-6"
+      style="
+        box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1),
+          0 -8px 15px -3px rgba(0, 0, 0, 0.1);
+      "
+    >
+      <FormAppointment @appointment-submitted="handleAppointmentSubmission" />
+    </div>
   </div>
 </template>
 <script>

@@ -1,21 +1,106 @@
 <script setup lang="ts">
+import { ref } from "vue"
 import Logo from "../Molecule/Logo.vue"
 import { RouterLink } from "vue-router"
+
+const isMenuOpen = ref(false)
 </script>
 
 <template>
-  <nav class="flex items-center justify-between px-8 py-5 bg-white shadow-md">
-    <!-- Logo -->
-    <Logo text="HSV Hospital" />
+  <nav class="bg-white shadow-md px-6 py-4">
+    <div class="flex items-center justify-between">
+      <!-- Logo -->
+      <Logo text="HSV Hospital" />
 
-    <!-- Navigation -->
-    <ul class="flex gap-10 text-base font-semibold text-gray-800">
+      <!-- Bouton burger (mobile uniquement) -->
+      <button
+        class="sm:hidden text-gray-800 focus:outline-none"
+        @click="isMenuOpen = !isMenuOpen"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
+
+      <!-- Menu (desktop) -->
+      <ul class="hidden sm:flex gap-8 text-base font-semibold text-gray-800">
+        <li>
+          <RouterLink
+            to="/"
+            exact-active-class="text-[var(--color-primary)]"
+            v-slot="{ isActive }"
+            class="relative px-2 py-1"
+          >
+            <span
+              :class="{
+                'text-[var(--color-primary)] after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:bg-[var(--color-primary)] after:rounded-full after:content-[\'\']':
+                  isActive,
+              }"
+            >
+              Home
+            </span>
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink
+            to="/booking"
+            active-class="text-[var(--color-primary)]"
+            v-slot="{ isActive }"
+            class="relative px-2 py-1"
+          >
+            <span
+              :class="{
+                'text-[var(--color-primary)] after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:bg-[var(--color-primary)] after:rounded-full after:content-[\'\']':
+                  isActive,
+              }"
+            >
+              Booking Appointment
+            </span>
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink
+            to="/tracking"
+            active-class="text-[var(--color-primary)]"
+            v-slot="{ isActive }"
+            class="relative px-2 py-1"
+          >
+            <span
+              :class="{
+                'text-[var(--color-primary)] after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:bg-[var(--color-primary)] after:rounded-full after:content-[\'\']':
+                  isActive,
+              }"
+            >
+              Tracking Appointment
+            </span>
+          </RouterLink>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Menu mobile (visible uniquement si isMenuOpen) -->
+    <ul
+      v-if="isMenuOpen"
+      class="flex flex-col gap-4 mt-4 text-base font-semibold text-gray-800 sm:hidden"
+    >
       <li>
         <RouterLink
           to="/"
-          class="relative px-2 py-1 cursor-pointer transition-colors duration-200 ease-in-out focus:outline-none"
-          exact-active-class="text-[var(--color-primary)] after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:bg-[var(--color-primary)] after:rounded-full after:opacity-100 after:transition-opacity"
+          exact-active-class="text-[var(--color-primary)]"
           v-slot="{ isActive }"
+          class="px-2 py-1"
+          @click="isMenuOpen = false"
         >
           <span :class="{ 'text-[var(--color-primary)]': isActive }">
             Home
@@ -25,9 +110,10 @@ import { RouterLink } from "vue-router"
       <li>
         <RouterLink
           to="/booking"
-          class="relative px-2 py-1 cursor-pointer transition-colors duration-200 ease-in-out focus:outline-none"
-          active-class="text-[var(--color-primary)] after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:bg-[var(--color-primary)] after:rounded-full after:opacity-100 after:transition-opacity"
+          active-class="text-[var(--color-primary)]"
           v-slot="{ isActive }"
+          class="px-2 py-1"
+          @click="isMenuOpen = false"
         >
           <span :class="{ 'text-[var(--color-primary)]': isActive }">
             Booking Appointment
@@ -37,9 +123,10 @@ import { RouterLink } from "vue-router"
       <li>
         <RouterLink
           to="/tracking"
-          class="relative px-2 py-1 cursor-pointer transition-colors duration-200 ease-in-out focus:outline-none"
-          active-class="text-[var(--color-primary)] after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:bg-[var(--color-primary)] after:rounded-full after:opacity-100 after:transition-opacity"
+          active-class="text-[var(--color-primary)]"
           v-slot="{ isActive }"
+          class="px-2 py-1"
+          @click="isMenuOpen = false"
         >
           <span :class="{ 'text-[var(--color-primary)]': isActive }">
             Tracking Appointment

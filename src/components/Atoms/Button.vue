@@ -9,7 +9,7 @@ const props = defineProps<{
 const variant = props.variant ?? "primary"
 
 const baseClasses =
-  "inline-flex items-center gap-2 py-3 px-6 rounded-lg font-semibold cursor-pointer transition-all duration-200 text-lg no-underline"
+  "inline-flex items-center justify-center gap-2 py-3 px-6 rounded-lg font-semibold cursor-pointer transition-all duration-200 text-lg no-underline"
 
 const classes =
   variant === "primary"

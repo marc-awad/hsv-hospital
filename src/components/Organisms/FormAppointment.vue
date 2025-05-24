@@ -21,7 +21,7 @@
         <PageTitle title="Patient Information" :sizeRem="1.4" />
       </div>
 
-      <div class="grid grid-cols-2 gap-6 mb-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8">
         <Input
           label="First Name"
           inputId="firstName"
@@ -43,7 +43,7 @@
           placeholder="+33 6 12 34 56 78"
           v-model="phone"
           required
-          class="col-span-2"
+          class="sm:col-span-2"
         />
         <Input
           label="Email"
@@ -52,7 +52,7 @@
           placeholder="your.email@example.com"
           v-model="email"
           required
-          class="col-span-2"
+          class="sm:col-span-2"
         />
       </div>
 
@@ -76,7 +76,7 @@
         <PageTitle title="Appointment Details" :sizeRem="1.4" />
       </div>
 
-      <div class="grid grid-cols-2 gap-6 mb-12">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-12">
         <Select
           label="Medical Specialty"
           inputId="speciality"
@@ -86,11 +86,12 @@
           :options="specialtiesOptions"
           :loading="loadingSpecialties"
           @update:modelValue="onSpecialtyChange"
+          class="sm:col-start-1"
         />
 
         <div
           v-if="showDoctorField"
-          class="transition-all duration-300 ease-in-out"
+          class="transition-all duration-300 ease-in-out sm:col-start-2"
         >
           <Select
             label="Doctor"
@@ -121,8 +122,8 @@
         />
       </div>
 
-      <div class="flex justify-end mt-6">
-        <Button type="submit" :disabled="isSubmitting">
+      <div class="flex justify-center sm:justify-end mt-6">
+        <Button type="submit" :disabled="isSubmitting" class="w-full sm:w-auto">
           <svg
             v-if="!isSubmitting"
             xmlns="http://www.w3.org/2000/svg"

@@ -1,5 +1,7 @@
 <template>
-  <div class="flex flex-col items-center text-center my-8 gap-y-4">
+  <div
+    class="flex flex-col items-center text-center my-4 sm:my-8 gap-y-4 px-4 sm:px-6"
+  >
     <PageTitle title="Track Your Appointment" :sizeRem="2.5" color="primary" />
     <SecondaryText :shade="500" :sizeRem="1.2" :maxWidthPx="600"
       >Easily find and manage your upcoming appointment by providing your
