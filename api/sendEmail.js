@@ -42,7 +42,7 @@ export default async function handler(req, res) {
 
   const formatDate = (timestamp) => {
     const d = new Date(timestamp.seconds * 1000)
-    return d.toLocaleDateString("fr-FR", {
+    return d.toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
       month: "long",
@@ -53,10 +53,10 @@ export default async function handler(req, res) {
 
   const formatTime = (timestamp) => {
     const d = new Date(timestamp.seconds * 1000)
-    return d.toLocaleTimeString("fr-FR", {
-      hour: "2-digit",
+    return d.toLocaleTimeString("en-US", {
+      hour: "numeric",
       minute: "2-digit",
-      hour12: false,
+      hour12: true,
       timeZone: "Europe/Paris",
     })
   }
