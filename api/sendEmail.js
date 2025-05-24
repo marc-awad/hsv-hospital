@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     firstName,
     lastName,
     specialtyId,
-    doctorId,
+    doctorName,
     appointmentStart,
     appointmentEnd,
     status,
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     !firstName ||
     !lastName ||
     !specialtyId ||
-    !doctorId ||
+    !doctorName ||
     !appointmentStart ||
     !appointmentEnd
   ) {
@@ -101,7 +101,7 @@ export default async function handler(req, res) {
                 </div>
                 <div class="info-item">
                   <div class="label">Doctor</div>
-                  <div class="value">Dr. ${doctorId}</div>
+                  <div class="value">Dr. ${doctorName}</div>
                 </div>
                 <div class="info-item">
                   <div class="label">Date</div>

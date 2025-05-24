@@ -99,29 +99,16 @@ export default {
     },
 
     doctorDisplay() {
-      if (this.loadingDoctor) return "Loading doctor info..."
+      const name = this.appointment.doctorName?.trim()
 
-      if (this.doctorInfo?.firstName || this.doctorInfo?.lastName) {
-        const name = `${this.doctorInfo.firstName || ""} ${
-          this.doctorInfo.lastName || ""
-        }`.trim()
-        return name ? `Dr. ${name}` : "Doctor information unavailable"
-      }
-
-      const directName =
-        this.appointment.doctorName ||
-        this.appointment.doctor ||
-        this.appointment.doctorFullName
-      if (directName?.trim()) {
-        const clean = directName.trim()
-        return clean.toLowerCase().startsWith("dr") ? clean : `Dr. ${clean}`
+      if (name) {
+        return name.toLowerCase().startsWith("dr") ? name : `Dr. ${name}`
       }
 
       return this.appointment.doctorId
         ? `Dr. (ID: ${this.appointment.doctorId})`
         : "Doctor not assigned"
     },
-
     appointmentDate() {
       const { appointmentStart, date } = this.appointment
       if (appointmentStart) {

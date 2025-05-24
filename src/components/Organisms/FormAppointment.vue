@@ -597,6 +597,7 @@ const submitForm = async () => {
       email: email.value,
       phone: phone.value,
       doctorId: doctor.value,
+      doctorName: doctors.value.find((doc) => doc.id === doctor.value)?.name,
       specialtyId: specialty.value,
       appointmentStart: Timestamp.fromDate(startTime),
       appointmentEnd: Timestamp.fromDate(endTime),
@@ -604,7 +605,7 @@ const submitForm = async () => {
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     }
-
+    // console.log("appointmentData:", appointmentData)
     await addDoc(collection(db, "appointments"), appointmentData)
     await loadBookedAppointments()
 
