@@ -68,7 +68,7 @@ export default {
   props: {
     appointment: { type: Object, required: true },
     showButtons: { type: Boolean, default: true },
-    patientEmail: { type: String, required: true },
+    patientEmail: { type: String, required: false, default: "" },
   },
 
   emits: ["cancel"],
