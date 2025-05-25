@@ -82,7 +82,7 @@ const isMenuOpen = ref(false)
                   isActive,
               }"
             >
-              Tracking Appointment
+              Manage Appointment
             </span>
           </RouterLink>
         </li>
