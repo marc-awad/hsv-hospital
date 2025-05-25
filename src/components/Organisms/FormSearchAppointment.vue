@@ -58,6 +58,7 @@
           v-for="appointment in appointments"
           :key="appointment.id"
           :appointment="appointment"
+          :patientEmail="appointment.email"
           @cancel="confirmCancelAppointment"
         />
       </div>
