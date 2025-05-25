@@ -129,7 +129,19 @@ export default {
       return null
     }
 
+    // Dans le composant parent, remplacez la méthode confirmCancelAppointment par :
+
     const confirmCancelAppointment = async (appointment) => {
+      // Si l'appointment contient le flag _verified, c'est que la vérification par email a déjà été faite
+      if (appointment._verified) {
+        console.log(
+          "✅ Vérification par email déjà effectuée, suppression directe"
+        )
+        await cancelAppointmentAction(appointment.id)
+        return
+      }
+
+      // Sinon, afficher la modal de confirmation classique (pour les cas sans vérification email)
       const formatDate = (date) => {
         if (!(date instanceof Date)) return "Invalid Date"
         return date.toLocaleDateString("en-US", {
@@ -159,7 +171,7 @@ export default {
       )
 
       if (result.isConfirmed) {
-        cancelAppointmentAction(appointment.id)
+        await cancelAppointmentAction(appointment.id)
       }
     }
 

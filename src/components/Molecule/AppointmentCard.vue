@@ -495,6 +495,8 @@ export default {
       }
     },
 
+    // Dans AppointmentCard.vue, méthode verifyCode :
+
     async verifyCode(inputCode) {
       if (inputCode === this.verificationData.code) {
         // Code is correct, proceed with cancellation
@@ -505,8 +507,11 @@ export default {
           confirmButtonColor: "#10b981",
         })
 
-        // Émettre l'événement de suppression immédiatement après la confirmation
-        this.$emit("cancel", this.appointment)
+        // Émettre l'événement avec le flag _verified pour indiquer que la vérification a été faite
+        this.$emit("cancel", {
+          ...this.appointment,
+          _verified: true,
+        })
       } else {
         // Code is incorrect
         Swal.fire({
