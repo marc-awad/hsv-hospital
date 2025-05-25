@@ -17,6 +17,7 @@
     "dotenv": "^16.5.0",
     "firebase": "^11.7.3",
     "firebase-admin": "^13.4.0",
+    "qrcode": "^1.5.4",
     "sib-api-v3-sdk": "^8.5.0",
     "sweetalert2": "^11.21.2",
     "vue": "^3.5.13",

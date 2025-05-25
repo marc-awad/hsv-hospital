@@ -1,4 +1,16 @@
 import SibApiV3Sdk from "sib-api-v3-sdk"
+import QRCode from "qrcode"
+
+const qrData = `
+Patient: ${firstName} ${lastName}
+Specialty: ${formatSpecialty(specialtyId)}
+Doctor: Dr. ${doctorName}
+Date: ${formatDate(appointmentStart)}
+Time: ${formatTime(appointmentStart)}
+Status: ${status}
+`
+
+const qrCodeImage = await QRCode.toDataURL(qrData)
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -119,6 +131,8 @@ export default async function handler(req, res) {
                 </div>
               </div>
             </div>
+            <h3>Scan your appointment QR code</h3>
+            <img src="${qrCodeImage}" alt="QR Code" style="width: 200px; height: 200px;" />
 
             <div class="instructions">
               <strong>Important:</strong><br>
