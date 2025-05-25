@@ -498,16 +498,15 @@ export default {
     async verifyCode(inputCode) {
       if (inputCode === this.verificationData.code) {
         // Code is correct, proceed with cancellation
-        const result = await Swal.fire({
+        await Swal.fire({
           title: "Appointment Cancelled!",
           text: "Your appointment has been successfully cancelled.",
           icon: "success",
           confirmButtonColor: "#10b981",
         })
 
-        if (result.isConfirmed) {
-          this.$emit("cancel", this.appointment)
-        }
+        // Émettre l'événement de suppression immédiatement après la confirmation
+        this.$emit("cancel", this.appointment)
       } else {
         // Code is incorrect
         Swal.fire({
