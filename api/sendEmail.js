@@ -1,17 +1,6 @@
 import SibApiV3Sdk from "sib-api-v3-sdk"
 import QRCode from "qrcode"
 
-const qrData = `
-Patient: ${firstName} ${lastName}
-Specialty: ${formatSpecialty(specialtyId)}
-Doctor: Dr. ${doctorName}
-Date: ${formatDate(appointmentStart)}
-Time: ${formatTime(appointmentStart)}
-Status: ${status}
-`
-
-const qrCodeImage = await QRCode.toDataURL(qrData)
-
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" })
@@ -47,6 +36,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Incomplete appointment details" })
   }
 
+  // Définir les fonctions utilitaires
   const formatSpecialty = (s) =>
     s === "generalmedicine"
       ? "General Medicine"
@@ -73,6 +63,22 @@ export default async function handler(req, res) {
     })
   }
 
+  // Générer le QR code APRÈS avoir défini toutes les variables et fonctions
+  const qrData = `Patient: ${firstName} ${lastName}
+Specialty: ${formatSpecialty(specialtyId)}
+Doctor: Dr. ${doctorName}
+Date: ${formatDate(appointmentStart)}
+Time: ${formatTime(appointmentStart)}
+Status: ${status}`
+
+  let qrCodeImage
+  try {
+    qrCodeImage = await QRCode.toDataURL(qrData)
+  } catch (qrError) {
+    console.error("Error generating QR code:", qrError)
+    return res.status(500).json({ error: "Failed to generate QR code" })
+  }
+
   try {
     SibApiV3Sdk.ApiClient.instance.authentications["api-key"].apiKey =
       process.env.SENDINBLUE_API_KEY
@@ -95,6 +101,7 @@ export default async function handler(req, res) {
           .badge { background: #10b981; color: white; padding: 4px 12px; border-radius: 15px; font-size: 12px; }
           .instructions { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin: 20px 0; }
           .footer { background: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #ddd; }
+          .qr-container { text-align: center; margin: 20px 0; }
         </style>
       </head>
       <body>
@@ -131,8 +138,11 @@ export default async function handler(req, res) {
                 </div>
               </div>
             </div>
-            <h3>Scan your appointment QR code</h3>
-            <img src="${qrCodeImage}" alt="QR Code" style="width: 200px; height: 200px;" />
+            
+            <div class="qr-container">
+              <h3>Scan your appointment QR code</h3>
+              <img src="${qrCodeImage}" alt="Appointment QR Code" style="width: 200px; height: 200px; border: 1px solid #ddd; border-radius: 8px;" />
+            </div>
 
             <div class="instructions">
               <strong>Important:</strong><br>
@@ -169,6 +179,7 @@ export default async function handler(req, res) {
       messageId: response.messageId,
     })
   } catch (error) {
+    console.error("Email sending error:", error)
     return res.status(500).json({
       error: "Failed to send email",
       details: error.response?.body || error.message,
