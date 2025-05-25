@@ -146,7 +146,10 @@
         </div>
 
         <!-- FullCalendar -->
-        <div class="calendar-wrapper bg-white rounded-lg shadow-sm border">
+        <div
+          class="calendar-wrapper bg-white rounded-lg shadow-sm border"
+          :class="{ 'has-selection': selectedSlot }"
+        >
           <FullCalendar ref="calendar" :options="calendarOptions" />
         </div>
 
@@ -308,11 +311,12 @@ const scrollToSelectedSlot = () => {
   if (selectedSlotRef.value) {
     selectedSlotRef.value.scrollIntoView({
       behavior: "smooth",
-      block: "center", // ou 'start' selon votre préférence
+      block: "center",
       inline: "nearest",
     })
   }
 }
+
 // Generate time slots for next 6 months (weekdays only, 9-12, 14-17)
 const generateTimeSlots = () => {
   const slots: any[] = []
@@ -376,6 +380,18 @@ function formatSpecialty(specialty?: string): string {
   return specialty.charAt(0).toUpperCase() + specialty.slice(1).toLowerCase()
 }
 
+// Fonction pour vérifier si un événement est sélectionné
+const isEventSelected = (eventStart: string, eventEnd: string): boolean => {
+  if (!selectedSlot.value) return false
+
+  const selectedStart = new Date(selectedSlot.value.start).getTime()
+  const selectedEnd = new Date(selectedSlot.value.end).getTime()
+  const eventStartTime = new Date(eventStart).getTime()
+  const eventEndTime = new Date(eventEnd).getTime()
+
+  return selectedStart === eventStartTime && selectedEnd === eventEndTime
+}
+
 // Calendar events
 const calendarEvents = computed(() => {
   const events = []
@@ -383,15 +399,23 @@ const calendarEvents = computed(() => {
   // Available slots
   generateTimeSlots().forEach((slot) => {
     if (!isSlotBooked(slot.start, slot.end)) {
+      const isSelected = isEventSelected(slot.start, slot.end)
+
       events.push({
         title: "Available",
         start: slot.start,
         end: slot.end,
-        backgroundColor: "#10b981",
-        borderColor: "#10b981",
+        backgroundColor: isSelected ? "#059669" : "#10b981", // Vert plus foncé si sélectionné
+        borderColor: isSelected ? "#059669" : "#10b981",
         textColor: "#ffffff",
-        extendedProps: { type: "available" },
-        classNames: ["cursor-pointer"],
+        extendedProps: {
+          type: "available",
+          isSelected: isSelected,
+        },
+        classNames: [
+          "cursor-pointer",
+          isSelected ? "event-selected" : "event-available",
+        ],
       })
     }
   })
@@ -406,6 +430,7 @@ const calendarEvents = computed(() => {
       borderColor: "#ef4444",
       textColor: "#ffffff",
       extendedProps: { type: "booked" },
+      classNames: ["event-booked"],
     })
   })
 
@@ -433,6 +458,7 @@ const calendarEvents = computed(() => {
       borderColor: "#9ca3af",
       textColor: "#ffffff",
       extendedProps: { type: "break" },
+      classNames: ["event-break"],
     })
   }
 
@@ -462,7 +488,6 @@ const calendarOptions = computed(() => ({
     if (info.event.extendedProps.type === "available") {
       selectedSlot.value = { start: info.event.start, end: info.event.end }
 
-      // 5. Ajoutez un petit délai pour que le DOM se mette à jour
       nextTick(() => {
         scrollToSelectedSlot()
       })
@@ -549,7 +574,7 @@ const loadBookedAppointments = async () => {
     console.error("Error loading appointments:", error)
   }
 }
-// Fonction corrigée pour checkSlotAvailability
+
 const checkSlotAvailability = async (
   doctorId: string,
   startTime: Date,
@@ -631,7 +656,7 @@ const submitForm = async () => {
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     }
-    // console.log("appointmentData:", appointmentData)
+
     await addDoc(collection(db, "appointments"), appointmentData)
     await loadBookedAppointments()
 
@@ -697,21 +722,65 @@ onMounted(async () => {
 </script>
 
 <style>
-.fc-event {
-  transition: all 0.2s ease;
+fc-event {
+  transition: all 0.3s ease;
 }
+
 .fc-event:hover {
   transform: scale(1.02);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
 .fc-event-title {
   font-weight: 500;
   font-size: 0.85rem;
 }
+
 .calendar-wrapper {
   min-height: 600px;
+  transition: all 0.3s ease;
 }
 
+/* Effet de grisement quand une sélection est active */
+.calendar-wrapper.has-selection .fc-event:not(.event-selected) {
+  opacity: 0.6;
+  filter: grayscale(20%);
+}
+
+/* Mise en évidence de l'événement sélectionné */
+.calendar-wrapper.has-selection .fc-event.event-selected {
+  opacity: 1;
+  filter: none;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+  z-index: 10;
+  position: relative;
+}
+
+/* Animation pour l'événement sélectionné */
+.event-selected {
+  animation: pulse-selection 2s ease-in-out;
+}
+
+@keyframes pulse-selection {
+  0% {
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(5, 150, 105, 0.6);
+  }
+  100% {
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+  }
+}
+
+/* Empêcher les événements non-disponibles d'être affectés par le grisement */
+.calendar-wrapper.has-selection .fc-event.event-booked,
+.calendar-wrapper.has-selection .fc-event.event-break {
+  opacity: 0.7;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .fc-header-toolbar {
     flex-direction: column;
@@ -720,6 +789,10 @@ onMounted(async () => {
   .fc-toolbar-chunk {
     display: flex;
     justify-content: center;
+  }
+
+  .calendar-wrapper.has-selection .fc-event.event-selected {
+    transform: scale(1.02);
   }
 }
 </style>
