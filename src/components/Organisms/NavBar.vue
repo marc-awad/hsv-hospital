@@ -7,7 +7,7 @@ const isMenuOpen = ref(false)
 </script>
 
 <template>
-  <nav class="bg-white shadow-md px-6 py-4">
+  <nav class="fixed top-0  w-full  shadow-lg z-50 transition-all duration-300 bg-white shadow-md px-6 py-4">
     <div class="flex items-center justify-between">
       <!-- Logo -->
       <Logo text="HSV Hospital" />

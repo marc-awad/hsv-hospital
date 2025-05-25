@@ -5,8 +5,8 @@ import FooterCopyright from "./components/Organisms/FooterCopyright.vue"
 
 <template>
   <div class="flex flex-col min-h-screen overflow-x-hidden">
-    <NavBar />
-    <main class="flex-grow px-4 sm:px-6 lg:px-8">
+    <NavBar/>
+    <main class="flex-grow px-4 sm:px-6 lg:px-8 mt-16">
       <router-view />
     </main>
     <FooterCopyright />
