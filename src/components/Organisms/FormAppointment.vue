@@ -153,6 +153,7 @@
         <!-- Selected Slot Display -->
         <div
           v-if="selectedSlot"
+          ref="selectedSlotRef"
           class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg"
         >
           <div class="flex items-center gap-2">
@@ -219,7 +220,8 @@ import Button from "../Atoms/Button.vue"
 import Input from "../Atoms/Input.vue"
 import Select from "../Atoms/Select.vue"
 import PageTitle from "../Atoms/PageTitle.vue"
-import { ref, computed, onMounted } from "vue"
+import { ref, computed, onMounted, nextTick } from "vue"
+
 import { db } from "../../firebase/firebase"
 import {
   collection,
@@ -260,6 +262,7 @@ const email = ref("")
 const phone = ref("")
 const specialty = ref("")
 const doctor = ref("")
+const selectedSlotRef = ref<HTMLElement | null>(null)
 
 // Loading states
 const loadingSpecialties = ref(false)
@@ -301,6 +304,15 @@ const legends = [
   { label: "Break", color: "bg-yellow-500" },
 ]
 
+const scrollToSelectedSlot = () => {
+  if (selectedSlotRef.value) {
+    selectedSlotRef.value.scrollIntoView({
+      behavior: "smooth",
+      block: "center", // ou 'start' selon votre préférence
+      inline: "nearest",
+    })
+  }
+}
 // Generate time slots for next 6 months (weekdays only, 9-12, 14-17)
 const generateTimeSlots = () => {
   const slots: any[] = []
@@ -449,6 +461,11 @@ const calendarOptions = computed(() => ({
   eventClick: (info: any) => {
     if (info.event.extendedProps.type === "available") {
       selectedSlot.value = { start: info.event.start, end: info.event.end }
+
+      // 5. Ajoutez un petit délai pour que le DOM se mette à jour
+      nextTick(() => {
+        scrollToSelectedSlot()
+      })
     }
   },
   height: "auto",
