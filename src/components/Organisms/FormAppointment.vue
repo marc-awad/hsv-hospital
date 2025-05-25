@@ -301,7 +301,7 @@ const isFormValid = computed(
 const legends = [
   { label: "Available", color: "bg-green-500" },
   { label: "Booked", color: "bg-red-500" },
-  { label: "Break", color: "bg-yellow-500" },
+  { label: "Break", color: "bg-gray-400" },
 ]
 
 const scrollToSelectedSlot = () => {
@@ -426,11 +426,11 @@ const calendarEvents = computed(() => {
     lunchEnd.setHours(14, 0, 0, 0)
 
     events.push({
-      title: "Lunch Break",
+      title: "",
       start: lunchStart.toISOString(),
       end: lunchEnd.toISOString(),
-      backgroundColor: "#f59e0b",
-      borderColor: "#f59e0b",
+      backgroundColor: "#9ca3af",
+      borderColor: "#9ca3af",
       textColor: "#ffffff",
       extendedProps: { type: "break" },
     })
