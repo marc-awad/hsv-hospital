@@ -182,7 +182,7 @@ export default {
         const snap = await getDoc(doc(db, "doctors", this.appointment.doctorId))
         this.doctorInfo = snap.exists() ? { id: snap.id, ...snap.data() } : null
       } catch (error) {
-        console.error("Error fetching doctor:", error)
+        // console.error("Error fetching doctor:", error)
         this.doctorInfo = null
       } finally {
         this.loadingDoctor = false
@@ -196,13 +196,13 @@ export default {
 
       // Mode développement : annulation directe
       if (isDev) {
-        console.log("🔧 MODE DÉVELOPPEMENT ACTIVÉ - Annulation directe")
-        console.log("📅 Rendez-vous à annuler:", {
-          patient: `${this.appointment.firstName} ${this.appointment.lastName}`,
-          doctor: this.appointment.doctorName,
-          date: this.dateDisplay,
-          time: this.timeDisplay,
-        })
+        // console.log("🔧 MODE DÉVELOPPEMENT ACTIVÉ - Annulation directe")
+        // console.log("📅 Rendez-vous à annuler:", {
+        //   patient: `${this.appointment.firstName} ${this.appointment.lastName}`,
+        //   doctor: this.appointment.doctorName,
+        //   date: this.dateDisplay,
+        //   time: this.timeDisplay,
+        // })
 
         this.cancelLoading = true
 
@@ -219,7 +219,7 @@ export default {
       this.cancelLoading = true
 
       try {
-        console.log("📧 Envoi du code de vérification à:", this.patientEmail)
+        // console.log("📧 Envoi du code de vérification à:", this.patientEmail)
 
         const response = await fetch("/api/sendVerificationCode", {
           method: "POST",
@@ -235,7 +235,7 @@ export default {
         const data = await response.json()
 
         if (response.ok) {
-          console.log("✅ Code de vérification envoyé avec succès")
+          // console.log("✅ Code de vérification envoyé avec succès")
 
           this.verificationData = {
             code: data.verificationCode,
@@ -247,10 +247,10 @@ export default {
           throw new Error(data.error || "Error sending verification code")
         }
       } catch (error) {
-        console.error(
-          "❌ Erreur lors de l'envoi du code de vérification:",
-          error
-        )
+        // console.error(
+        //   "❌ Erreur lors de l'envoi du code de vérification:",
+        //   error
+        // )
 
         Swal.fire({
           title: "Erreur !",
