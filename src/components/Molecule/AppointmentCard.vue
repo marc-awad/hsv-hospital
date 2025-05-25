@@ -48,7 +48,7 @@
         @click="handleCancelRequest"
         :disabled="cancelLoading"
       >
-        {{ cancelLoading ? "Sending code..." : "Cancel Appointment" }}
+        {{ cancelLoading ? "Cancelling..." : "Cancel Appointment" }}
       </Button>
     </div>
   </div>
@@ -68,7 +68,7 @@ export default {
   props: {
     appointment: { type: Object, required: true },
     showButtons: { type: Boolean, default: true },
-    patientEmail: { type: String, required: true }, // Patient's email
+    patientEmail: { type: String, required: true },
   },
 
   emits: ["cancel"],
@@ -194,10 +194,9 @@ export default {
 
       const isDev = import.meta.env.MODE === "development"
 
-      // Mode développement : simulation complète du processus
+      // Mode développement : annulation directe
       if (isDev) {
-        console.log("🔧 MODE DÉVELOPPEMENT ACTIVÉ")
-        console.log("📧 Email cible:", this.patientEmail)
+        console.log("🔧 MODE DÉVELOPPEMENT ACTIVÉ - Annulation directe")
         console.log("📅 Rendez-vous à annuler:", {
           patient: `${this.appointment.firstName} ${this.appointment.lastName}`,
           doctor: this.appointment.doctorName,
@@ -207,73 +206,22 @@ export default {
 
         this.cancelLoading = true
 
-        // Simuler un délai d'API réaliste
-        await new Promise((resolve) => setTimeout(resolve, 1500))
+        // Simuler un délai réaliste
+        await new Promise((resolve) => setTimeout(resolve, 1000))
 
-        try {
-          // Simuler différents scénarios en développement
-          const scenario = this.getDevScenario()
-
-          switch (scenario) {
-            case "success":
-              console.log("✅ Simulation : Code envoyé avec succès")
-              this.verificationData = {
-                code: "123456", // Code de test fixe
-                expiresAt: Date.now() + 300000, // 5 minutes
-              }
-              await this.showVerificationModal()
-              break
-
-            case "email_error":
-              console.log("❌ Simulation : Erreur d'envoi d'email")
-              throw new Error("Simulated email sending error")
-
-            case "api_error":
-              console.log("❌ Simulation : Erreur API")
-              throw new Error("Simulated API error")
-
-            default:
-              // Comportement par défaut : succès
-              this.verificationData = {
-                code: "123456",
-                expiresAt: Date.now() + 300000,
-              }
-              await this.showVerificationModal()
-          }
-        } catch (error) {
-          console.error("🚨 Erreur simulée en développement:", error)
-
-          Swal.fire({
-            title: "Erreur (Mode Dev)",
-            html: `
-          <div style="text-align: left;">
-            <p><strong>Erreur simulée :</strong> ${error.message}</p>
-            <div style="background: #f3f4f6; padding: 10px; border-radius: 4px; margin-top: 15px; font-size: 12px;">
-              <strong>Mode développement :</strong><br>
-              • Code de test : 123456<br>
-              • Cette erreur est simulée<br>
-              • Aucun email réel n'est envoyé
-            </div>
-          </div>
-        `,
-            icon: "error",
-            confirmButtonColor: "#ef4444",
-          })
-        } finally {
-          this.cancelLoading = false
-        }
+        // Émettre directement l'événement de suppression
+        this.$emit("cancel", this.appointment)
+        this.cancelLoading = false
         return
       }
 
-      // Mode production : comportement normal
+      // Mode production : processus de vérification
       this.cancelLoading = true
 
       try {
         console.log("📧 Envoi du code de vérification à:", this.patientEmail)
 
-        // Call API to send verification code
         const response = await fetch("/api/sendVerificationCode", {
-          // Corrigé la faute de frappe
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -289,13 +237,11 @@ export default {
         if (response.ok) {
           console.log("✅ Code de vérification envoyé avec succès")
 
-          // Store verification data
           this.verificationData = {
             code: data.verificationCode,
             expiresAt: data.expiresAt,
           }
 
-          // Show SweetAlert2 modal
           await this.showVerificationModal()
         } else {
           throw new Error(data.error || "Error sending verification code")
@@ -309,62 +255,22 @@ export default {
         Swal.fire({
           title: "Erreur !",
           html: `
-        <div style="text-align: left;">
-          <p>Impossible d'envoyer le code de vérification.</p>
-          <details style="margin-top: 15px; font-size: 12px; color: #666;">
-            <summary style="cursor: pointer;">Détails techniques</summary>
-            <div style="background: #f9f9f9; padding: 10px; border-radius: 4px; margin-top: 5px;">
-              <strong>Erreur :</strong> ${error.message}<br>
-              <strong>Email :</strong> ${this.patientEmail}
+            <div style="text-align: left;">
+              <p>Impossible d'envoyer le code de vérification.</p>
+              <details style="margin-top: 15px; font-size: 12px; color: #666;">
+                <summary style="cursor: pointer;">Détails techniques</summary>
+                <div style="background: #f9f9f9; padding: 10px; border-radius: 4px; margin-top: 5px;">
+                  <strong>Erreur :</strong> ${error.message}<br>
+                  <strong>Email :</strong> ${this.patientEmail}
+                </div>
+              </details>
             </div>
-          </details>
-        </div>
-      `,
+          `,
           icon: "error",
           confirmButtonColor: "#ef4444",
         })
       } finally {
         this.cancelLoading = false
-      }
-    },
-
-    // Méthode helper pour gérer les différents scénarios en développement
-    getDevScenario() {
-      // Vous pouvez changer cette logique selon vos besoins de test
-      const scenarios = ["success", "email_error", "api_error"]
-      const weights = [0.7, 0.2, 0.1] // 70% succès, 20% erreur email, 10% erreur API
-
-      // Ou forcer un scénario spécifique pour les tests
-      const forcedScenario = localStorage.getItem("dev_cancel_scenario")
-      if (forcedScenario && scenarios.includes(forcedScenario)) {
-        console.log(`🎯 Scénario forcé: ${forcedScenario}`)
-        return forcedScenario
-      }
-
-      // Sélection aléatoire pondérée
-      const random = Math.random()
-      let cumulativeWeight = 0
-
-      for (let i = 0; i < scenarios.length; i++) {
-        cumulativeWeight += weights[i]
-        if (random <= cumulativeWeight) {
-          console.log(`🎲 Scénario aléatoire: ${scenarios[i]}`)
-          return scenarios[i]
-        }
-      }
-
-      return "success" // par défaut
-    },
-
-    // Méthode pour les développeurs pour forcer un scénario
-    setDevScenario(scenario) {
-      const validScenarios = ["success", "email_error", "api_error"]
-      if (validScenarios.includes(scenario)) {
-        localStorage.setItem("dev_cancel_scenario", scenario)
-        console.log(`🎯 Scénario de test défini: ${scenario}`)
-      } else {
-        localStorage.removeItem("dev_cancel_scenario")
-        console.log(`🎯 Scénario de test réinitialisé (aléatoire)`)
       }
     },
 
@@ -445,7 +351,6 @@ export default {
             e.target.value = e.target.value.replace(/\D/g, "")
           })
 
-          // Start countdown timer
           this.startCountdownTimer()
         },
       })
@@ -483,7 +388,6 @@ export default {
         }
       }
 
-      // Add timer element to the modal
       const container = Swal.getHtmlContainer()
       if (container && !document.getElementById("countdown-timer")) {
         const timerDiv = document.createElement("div")
@@ -495,17 +399,13 @@ export default {
       }
     },
 
-    // Dans AppointmentCard.vue, méthode verifyCode :
-
     async verifyCode(inputCode) {
       if (inputCode === this.verificationData.code) {
-        // Émettre l'événement avec le flag _verified pour indiquer que la vérification a été faite
         this.$emit("cancel", {
           ...this.appointment,
           _verified: true,
         })
       } else {
-        // Code is incorrect
         Swal.fire({
           title: "Invalid Code!",
           text: "The verification code is incorrect. Please check your email and try again.",
