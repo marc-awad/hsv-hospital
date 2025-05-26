@@ -95,6 +95,22 @@ export default {
     const loading = ref(false)
     const searchPerformed = ref(false)
 
+    // Fonction utilitaire pour filtrer les rendez-vous futurs
+    const filterFutureAppointments = (appointments) => {
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Début de la journée
+
+      return appointments.filter((appointment) => {
+        const appointmentDate = parseDateTime(
+          appointment.appointmentStart || appointment.date
+        )
+        if (!appointmentDate) return false
+
+        // Comparer avec le début de la journée d'aujourd'hui
+        return appointmentDate >= today
+      })
+    }
+
     const searchAppointments = async () => {
       if (!email.value && !phone.value) {
         showMissingFieldAlert("Please enter an email or phone number")
@@ -105,11 +121,16 @@ export default {
       searchPerformed.value = true
 
       try {
+        let allAppointments = []
+
         if (email.value) {
-          appointments.value = await getAppointmentsByEmail(email.value)
+          allAppointments = await getAppointmentsByEmail(email.value)
         } else if (phone.value) {
-          appointments.value = await getAppointmentsByPhone(phone.value)
+          allAppointments = await getAppointmentsByPhone(phone.value)
         }
+
+        // Filtrer pour ne garder que les rendez-vous d'aujourd'hui ou futurs
+        appointments.value = filterFutureAppointments(allAppointments)
       } catch (error) {
         console.error("Error searching for appointments:", error)
         showErrorAlert(
@@ -134,9 +155,9 @@ export default {
     const confirmCancelAppointment = async (appointment) => {
       // Si l'appointment contient le flag _verified, c'est que la vérification par email a déjà été faite
       if (appointment._verified) {
-        console.log(
-          "✅ Vérification par email déjà effectuée, suppression directe"
-        )
+        // console.log(
+        //   "✅ Vérification par email déjà effectuée, suppression directe"
+        // )
         await cancelAppointmentAction(appointment.id)
         return
       }
