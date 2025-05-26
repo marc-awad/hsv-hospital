@@ -63,14 +63,38 @@ export default async function handler(req, res) {
     })
   }
 
-  // Générer le QR code APRÈS avoir défini toutes les variables et fonctions
-  const qrData = `Patient: ${firstName} ${lastName}
-Specialty: ${formatSpecialty(specialtyId)}
-Doctor: Dr. ${doctorName}
-Date: ${formatDate(appointmentStart)}
-Time: ${formatTime(appointmentStart)}
-Status: ${status}`
+  const appointmentData = {
+    patientId:
+      appointment.patientId || appointment.id || `patient_${Date.now()}`, // Fallback if no ID
+    firstName,
+    lastName,
+    email: to, // Recipient's email
+    phone: appointment.phone || "", // Add phone if available
+    doctorId: appointment.doctorId,
+    doctorName,
+    specialtyId,
+    appointmentStart,
+    appointmentEnd,
+    status,
+    createdAt: appointment.createdAt || { _methodName: "serverTimestamp" },
+    updatedAt: appointment.updatedAt || { _methodName: "serverTimestamp" },
+  }
 
+  try {
+    // Encode data as JSON then URL encode
+    const encodedData = encodeURIComponent(JSON.stringify(appointmentData))
+
+    // Generate URL for QR code
+    const baseUrl = process.env.FRONTEND_URL || "http://localhost:5173" // Configure according to your environment
+    const qrData = `${baseUrl}/success?data=${encodedData}`
+
+    console.log("Generated QR URL:", qrData) // For debugging
+  } catch (jsonError) {
+    console.error("Error creating appointment data:", jsonError)
+    return res.status(500).json({ error: "Failed to create appointment URL" })
+  }
+
+  // The rest of the code remains the same
   let qrCodeImage
   try {
     qrCodeImage = await QRCode.toDataURL(qrData)
