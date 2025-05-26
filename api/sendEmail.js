@@ -90,7 +90,7 @@ export default async function handler(req, res) {
     const encodedData = encodeURIComponent(JSON.stringify(appointmentData))
 
     // Générer l'URL pour le QR code
-    const baseUrl = process.env.FRONTEND_URL || "http://localhost:5173"
+    const baseUrl = "https://hsv-hospital.vercel.app/"
     qrData = `${baseUrl}/success?data=${encodedData}`
 
     console.log("Generated QR URL:", qrData) // Pour le débogage
