@@ -63,13 +63,14 @@ export default async function handler(req, res) {
     })
   }
 
+  // Préparer les données de rendez-vous
   const appointmentData = {
     patientId:
-      appointment.patientId || appointment.id || `patient_${Date.now()}`, // Fallback if no ID
+      appointment.patientId || appointment.id || `patient_${Date.now()}`,
     firstName,
     lastName,
-    email: to, // Recipient's email
-    phone: appointment.phone || "", // Add phone if available
+    email: to,
+    phone: appointment.phone || "",
     doctorId: appointment.doctorId,
     doctorName,
     specialtyId,
@@ -80,29 +81,31 @@ export default async function handler(req, res) {
     updatedAt: appointment.updatedAt || { _methodName: "serverTimestamp" },
   }
 
+  // Générer l'URL pour le QR code (déplacé en dehors du try-catch)
+  let qrData
+  let qrCodeImage
+
   try {
-    // Encode data as JSON then URL encode
+    // Encoder les données comme JSON puis URL encode
     const encodedData = encodeURIComponent(JSON.stringify(appointmentData))
 
-    // Generate URL for QR code
-    const baseUrl = process.env.FRONTEND_URL || "http://localhost:5173" // Configure according to your environment
-    const qrData = `${baseUrl}/success?data=${encodedData}`
+    // Générer l'URL pour le QR code
+    const baseUrl = process.env.FRONTEND_URL || "http://localhost:5173"
+    qrData = `${baseUrl}/success?data=${encodedData}`
 
-    console.log("Generated QR URL:", qrData) // For debugging
-  } catch (jsonError) {
-    console.error("Error creating appointment data:", jsonError)
-    return res.status(500).json({ error: "Failed to create appointment URL" })
-  }
+    console.log("Generated QR URL:", qrData) // Pour le débogage
 
-  // The rest of the code remains the same
-  let qrCodeImage
-  try {
+    // Générer le QR code
     qrCodeImage = await QRCode.toDataURL(qrData)
-  } catch (qrError) {
-    console.error("Error generating QR code:", qrError)
-    return res.status(500).json({ error: "Failed to generate QR code" })
+  } catch (error) {
+    console.error("Error creating appointment data or QR code:", error)
+    return res.status(500).json({
+      error: "Failed to create appointment URL or generate QR code",
+      details: error.message,
+    })
   }
 
+  // Envoyer l'email
   try {
     SibApiV3Sdk.ApiClient.instance.authentications["api-key"].apiKey =
       process.env.SENDINBLUE_API_KEY
