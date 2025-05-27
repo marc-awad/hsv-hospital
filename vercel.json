@@ -18,15 +18,6 @@
           "value": "application/javascript; charset=utf-8"
         }
       ]
-    },
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Permissions-Policy",
-          "value": "geolocation=(self), microphone=()"
-        }
-      ]
     }
   ]
 }
